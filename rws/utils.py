@@ -1,0 +1,96 @@
+"""
+.. _utils:
+
+Utilities
+---------
+
+Provides miscellaneous utility functions.
+"""
+from typing import Dict, Sequence, Union
+
+import numpy as np
+import pandas as pd
+from cpymad.madx import Madx
+from loguru import logger
+
+Array = Union[np.ndarray, pd.Series]
+
+# ----- Querying Utilities ----- #
+
+
+def get_triplets_powering_knobs(madx: Madx, ip: int) -> Dict[str, float]:
+    """
+    Returns the triplets powering knob values at the given IP.
+
+    Args:
+        madx (cpymad.madx.Madx): an instantiated `~cpymad.madx.Madx` object.
+        ip (int): the IP for which to get the triplets powering knob values for.
+
+    Returns:
+        A dictionary of the knob names and their values.
+    """
+    logger.debug(f"Querying triplets powering knob values around IP{ip:d}.")
+    right_knob, left_knob = f"kqx.r{ip:d}", f"kqx.l{ip:d}"  # IP triplet default knobs (no trims)
+    return {right_knob: madx.globals[right_knob], left_knob: madx.globals[left_knob]}
+
+
+def get_independent_quadrupoles_powering_knobs(
+    madx: Madx, quad_numbers: Sequence[int], ip: int, beam: int
+) -> Dict[str, float]:
+    """
+    Returns the powering knob values for the provided quadrupoles around the given IP.
+
+    Args:
+        madx (cpymad.madx.Madx): an instantiated `~cpymad.madx.Madx` object.
+        quad_numbers (Sequence[int]): quadrupoles to get the powering for, by number
+            (aka position from IP).
+        ip (int): the IP around which to get the quadrupoles powering knobs for.
+
+    Returns:
+        A dictionary of the knob names and their values.
+    """
+    logger.debug(f"Querying powering knob values for quadrupoles {quad_numbers} around IP{ip:d}.")
+    powering_knobs = {}
+    sides = ("r", "l")
+    for quad in quad_numbers:
+        for side in sides:
+            logger.trace(f"Getting powering know for Q{quad}{side.upper()}{ip}")
+            knob = f"kq{'t' if quad >= 11 else ''}{'l' if quad == 11 else ''}{quad}.{side}{ip}b{beam}"
+            powering_knobs[knob] = madx.globals[knob]
+    return powering_knobs
+
+
+# ----- Computing Utilities ----- #
+
+
+def betabeating(nominal: Array, modified: Array) -> Array:
+    """
+    Compute the beta-beating from the provided arrays.
+
+    Args:
+        nominal (Union[np.ndarray, pd.Series]): the nominal beta values.
+        modified (Union[np.ndarray, pd.Series]): the beta values to get the
+            beta-beating for.
+
+    Returns:
+        A new array with the computed beta-beating values.
+    """
+    return (modified - nominal) / nominal
+
+
+def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, float]):
+    """
+    Compute the delta between the modified and nominal knobs, to determine the powering
+    change that should be given in LSA.
+
+    Args:
+        nominal_knobs (Dict[str, float]): a `~dict` of the nominal knobs and their values.
+        modified_knobs (Dict[str, float]): a `~dict` of the modified knobs and their values.
+
+    Returns:
+        A dictionary of the knob names and powering delta from the modifying scenario to the
+        nominal scenario.
+    """
+    logger.debug("Computing the delta between modified and nominal knobs.")
+    assert nominal_knobs.keys() == modified_knobs.keys()
+    return {key: modified_knobs[key] - nominal_knobs[key] for key in nominal_knobs.keys()}
