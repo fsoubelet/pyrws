@@ -208,7 +208,7 @@ def plot_phase_advances_comparison(
     show_ips: bool = False,
 ) -> None:
     """
-    Plots the phase advances (..math:`\phi_{x,y}`) across the machine for the nominal, bare waist
+    Plots the phase advances (..math:`\mu_{x,y}`) across the machine for the nominal, bare waist
     shift and improved waist shift scenarii on the given *axis*.
 
     Args:
@@ -231,27 +231,27 @@ def plot_phase_advances_comparison(
         nominal[column],
         ls="--",
         mfc="none",
-        label=r"$\phi_x^{nominal}$" if column == "BETX" else r"$\phi_y^{nominal}$",
+        label=r"$\mu_x^{nominal}$" if column == "BETX" else r"$\mu_y^{nominal}$",
     )
     axis.plot(
         before.S,
         before[column],
         ls="--",
         mfc="none",
-        label=r"$\phi_x^{bare}$" if column == "BETX" else r"$\phi_y^{bare}$",
+        label=r"$\mu_x^{bare}$" if column == "BETX" else r"$\mu_y^{bare}$",
     )
     axis.plot(
         after.S,
         after[column],
         ls="--",
         mfc="none",
-        label=r"$\phi_x^{improved}$" if column == "BETX" else r"$\phi_y^{improved}$",
+        label=r"$\mu_x^{improved}$" if column == "BETX" else r"$\mu_y^{improved}$",
     )
 
     if show_ips:
         _highlight_ips_locations(axis, nominal)
 
-    axis.set_ylabel(r"$\phi_{x} \ [rad]$" if column == "BETX" else r"$\phi_{y} \ [rad]$")
+    axis.set_ylabel(r"$\mu_{x} \ [2 \pi]$" if column == "BETX" else r"$\mu_{y} \ [2 \pi]$")
     axis.legend()
 
 
@@ -263,11 +263,11 @@ def plot_phase_differences(
     show_ips: bool = False,
 ) -> None:
     """
-    Plots the phase advances (..math:`\phi_{x,y}`) across the machine for the nominal, bare waist
+    Plots the phase advances (..math:`\mu_{x,y}`) across the machine for the nominal, bare waist
     shift and improved waist shift scenarii on the given *axis*.
 
     .. hint::
-        The value ..math:`\phi_x - \phiy` is interesting as it is driving the exponential term in the
+        The value ..math:`\mu_x - \muy` is interesting as it is driving the exponential term in the
         calculation of the difference resonance ..math:`f_{1001}`.
 
     Args:
@@ -291,7 +291,7 @@ def plot_phase_differences(
     if show_ips:
         _highlight_ips_locations(axis, nominal)
 
-    axis.set_ylabel(r"$\phi_{x} - \phi_{y} \ [rad]$")
+    axis.set_ylabel(r"$\mu_{x} - \mu_{y} \ [2 \pi]$")
     axis.legend()
 
 
@@ -299,6 +299,10 @@ def plot_phase_differences(
 
 
 def _highlight_ips_locations(axis: matplotlib.axes.Axes, dataframe: pd.DataFrame) -> None:
+    """
+    Figures out the ``S`` coordinate of IP[1258] locations from the given *dataframe* and adds
+    vertical lines for each one on the provided *axis*.
+    """
     dfcopy = dataframe.reset_index()
     ips_dataframe = dfcopy[dfcopy.NAME.str.contains("^IP[1258]$", case=False)].reset_index(drop=True)
     for row_tuple in ips_dataframe.itertuples():
