@@ -65,7 +65,7 @@ def get_nominal_beam_config(
     madx.command.use(sequence=f"lhcb{beam:d}")
 
     matching.match_tunes_and_chromaticities(madx, "lhc", f"lhcb{beam:d}", qx, qy, 2.0, 2.0, calls=200)
-    twiss_df = twiss.get_twiss_tfs(madx)
+    twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(
         madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam
@@ -111,7 +111,7 @@ def get_bare_waist_shift_beam1_config(
     lhc.apply_lhc_rigidity_waist_shift_knob(madx, rigidty_waist_shift_value=rigidty_waist_shift_value, ir=ip)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb1", qx, qy, 2.0, 2.0, calls=200)
 
-    twiss_df = twiss.get_twiss_tfs(madx)
+    twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(
         madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1
@@ -158,7 +158,7 @@ def get_bare_waist_shift_beam2_config(
         madx.globals.update(triplet_knobs)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb2", qx, qy, 2.0, 2.0, calls=200)
 
-    twiss_df = twiss.get_twiss_tfs(madx)
+    twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(
         madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1
@@ -219,15 +219,19 @@ def get_matched_waist_shift_config(
     MATCH_Q11_LEFT = f"MQ.11L{ip:d}.B{beam:d}"  # Q11 left of provided IP
     MATCH_Q11_RIGHT = f"MQ.11R{ip:d}.B{beam:d}"  # Q11 right of provided IP
     SEQUENCE = f"lhcb{beam:d}"  # sequence name, depending on the beam
+    logger.debug(
+        "Match point names are: "
+        f"'{MATCH_IP_POINT}', '{MATCH_Q3_LEFT}', '{MATCH_Q3_RIGHT}', '{MATCH_Q11_LEFT}', '{MATCH_Q11_RIGHT}'"
+    )
 
-    logger.debug("Matching at IP, Q3 and Q11 for the beta-functions and dispersion")
+    logger.debug("Matching for the beta-functions and dispersion")
     madx.command.match(sequence=SEQUENCE, chrom=True)
     # First we give constraints for the IP point, same as in the bare waist
     madx.command.constraint(
         sequence=SEQUENCE,
         range_=MATCH_IP_POINT,
-        betx=bare_twiss.BETX[f"IP{ip:d}"],
-        bety=bare_twiss.BETY[f"IP{ip:d}"],
+        betx=bare_twiss.BETX[MATCH_IP_POINT],
+        bety=bare_twiss.BETY[MATCH_IP_POINT],
         dx=0,
         dy=0,
     )
@@ -244,7 +248,7 @@ def get_matched_waist_shift_config(
         betx=bare_twiss.BETX[MATCH_Q3_RIGHT],
         bety=bare_twiss.BETY[MATCH_Q3_RIGHT],
     )
-    # Then constraints at Q11 matching point, now the same as in the nominal scenario
+    # Then constraints at Q11 matching points, now the same as in the nominal scenario
     madx.command.constraint(
         sequence=SEQUENCE,
         range_=MATCH_Q11_LEFT.upper(),
@@ -262,12 +266,11 @@ def get_matched_waist_shift_config(
         madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam
     )
     madx.command.jacobian(calls=25, strategy=3, tolerance=1.0e-21)
-    madx.command.lmdif(calls=25, tolerance=1.0e-21)
     madx.command.endmatch()
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
     matching.match_tunes_and_chromaticities(madx, "lhc", SEQUENCE, qx, qy, 2.0, 2.0, calls=200)
 
-    twiss_df = twiss.get_twiss_tfs(madx)
+    twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(
         madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam
