@@ -58,6 +58,13 @@ from pyhdtoolkit.utils.defaults import config_logger
     help="The vertical tune to match to.",
 )
 @click.option(
+    "--show_plots",
+    type=click.BOOL,
+    default=False,
+    show_default=True,
+    help="Whether to ask matplotlib to show plots.",
+)
+@click.option(
     "--loglevel",
     type=click.Choice(["trace", "debug", "info", "warning", "error", "critical"]),
     default="info",
@@ -72,6 +79,7 @@ def main(
     outputdir: Path,
     qx: float,
     qy: float,
+    show_plots: bool,
     loglevel: str,
 ):
     config_logger(level=loglevel)
