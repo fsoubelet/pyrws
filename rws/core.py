@@ -154,6 +154,7 @@ def get_bare_waist_shift_beam2_config(
     logger.debug(
         f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs"
     )
+    logger.debug(f"Triplet knobs are: {triplet_knobs}")
     with madx.batch():
         madx.globals.update(triplet_knobs)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb2", qx, qy, 2.0, 2.0, calls=200)
