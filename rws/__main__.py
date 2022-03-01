@@ -36,7 +36,12 @@ from pyhdtoolkit.utils.defaults import config_logger
     help="Unit setting of the rigid waist shift."
     "A value of 1 corresponds to a 0.5% change in the triplets powering.",
 )
-
+@click.option(
+    "--outputdir",
+    type=click.Path(exists=False, file_okay=False, resolve_path=True, path_type=Path),
+    default=Path.cwd() / "outputs",
+    help="Directory in which to write output files. Defaults to 'outputs/' in the current working directory.",
+)
 # ----- Optional Arguments ----- #
 @click.option(
     "--qx",
@@ -59,7 +64,16 @@ from pyhdtoolkit.utils.defaults import config_logger
     show_default=True,
     help="Sets the logging level.",
 )
-def main(sequence: Path, opticsfile: Path, ip: int, waist_shift: float, qx: float, qy: float, loglevel: str):
+def main(
+    sequence: Path,
+    opticsfile: Path,
+    ip: int,
+    waist_shift: float,
+    outputdir: Path,
+    qx: float,
+    qy: float,
+    loglevel: str,
+):
     config_logger(level=loglevel)
 
 

@@ -34,6 +34,7 @@ DEPENDENCIES = [
     "tfs-pandas>=3.1.0",
     "matplotlib>=3.0",
     "click>=8.0",
+    "optics-functions>=0.1.0",
 ]
 
 # Extra dependencies
