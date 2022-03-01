@@ -55,7 +55,7 @@ def get_independent_quadrupoles_powering_knobs(
     sides = ("r", "l")
     for quad in quad_numbers:
         for side in sides:
-            logger.trace(f"Getting powering know for Q{quad}{side.upper()}{ip}")
+            logger.trace(f"Getting powering knob for Q{quad}{side.upper()}{ip}")
             knob = f"kq{'t' if quad >= 11 else ''}{'l' if quad == 11 else ''}{quad}.{side}{ip}b{beam}"
             powering_knobs[knob] = madx.globals[knob]
     return powering_knobs
