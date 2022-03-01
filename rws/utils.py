@@ -7,7 +7,7 @@ Utilities
 Provides miscellaneous utility functions.
 """
 from pathlib import Path
-from typing import Dict, Sequence, Union
+from typing import Dict, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -100,13 +100,17 @@ def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, fl
 # ----- FileSystem Utilities ----- #
 
 
-def prepare_output_directories(outputdir: Path) -> None:
+def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path]:
     """
     Creates the proper directories where the output files will be written.
 
     Args:
         outputdir (Path): the path to the main output directory, as given by the user
             at the command line.
+    
+    Returns:
+        The `~pathlib.Path` objects to the created output directories. In order, these
+        are for beam1, beam1 plots, beam2 and beam2 plots.
     """
     logger.trace(f"Creating output directory at '{outputdir.absolute()}'.")
     outputdir.mkdir(parents=True, exist_ok=True)
@@ -126,3 +130,5 @@ def prepare_output_directories(outputdir: Path) -> None:
     beam2_plots_dir = beam2_dir / "PLOTS"
     logger.trace(f"Creating B2 plots sub-directories at '{beam2_plots_dir.absolute()}'.")
     beam2_plots_dir.mkdir(parents=True, exist_ok=True)
+
+    return beam1_dir, beam1_plots_dir, beam2_dir, beam2_plots_dir
