@@ -6,6 +6,7 @@ Utilities
 
 Provides miscellaneous utility functions.
 """
+from pathlib import Path
 from typing import Dict, Sequence, Union
 
 import numpy as np
@@ -94,3 +95,34 @@ def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, fl
     logger.debug("Computing the delta between modified and nominal knobs.")
     assert nominal_knobs.keys() == modified_knobs.keys()
     return {key: modified_knobs[key] - nominal_knobs[key] for key in nominal_knobs.keys()}
+
+
+# ----- FileSystem Utilities ----- #
+
+
+def prepare_output_directories(outputdir: Path) -> None:
+    """
+    Creates the proper directories where the output files will be written.
+    
+    Args:
+        outputdir (Path): the path to the main output directory, as given by the user
+            at the command line.
+    """
+    logger.trace(f"Creating output directory at '{outputdir.absolute()}'.")
+    outputdir.mkdir(parents=True, exist_ok=True)
+
+    beam1_dir = outputdir / "BEAM1"
+    logger.trace(f"Creating BEAM directories at '{beam1_dir.absolute()}'.")
+    beam1_dir.mkdir(parents=True, exist_ok=True)
+
+    beam2_dir = outputdir / "BEAM2"
+    logger.trace(f"Creating BEAM directories at '{beam2_dir.absolute()}'.")
+    beam2_dir.mkdir(parents=True, exist_ok=True)
+
+    beam1_plots_dir = beam1_dir / "PLOTS"
+    logger.trace(f"Creating B1 plots sub-directories at '{beam1_plots_dir.absolute()}'.")
+    beam1_plots_dir.mkdir(parents=True, exist_ok=True)
+
+    beam2_plots_dir = beam2_dir / "PLOTS"
+    logger.trace(f"Creating B2 plots sub-directories at '{beam2_plots_dir.absolute()}'.")
+    beam2_plots_dir.mkdir(parents=True, exist_ok=True)
