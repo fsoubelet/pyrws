@@ -215,7 +215,7 @@ def get_matched_waist_shift_config(
     logger.debug("Defining matching points to improve the waist shift")
     MATCH_IP_POINT = f"IP{ip:d}"  # IP marker
     MATCH_Q3_LEFT = f"MQXA.3L{ip:d}"  # Q3 left of provided IP
-    MATCH_Q3_RIGHT = f"MQXA.3L{ip:d}"  # Q3 right of provided IP
+    MATCH_Q3_RIGHT = f"MQXA.3R{ip:d}"  # Q3 right of provided IP
     MATCH_Q11_LEFT = f"MQ.11L{ip:d}.B{beam:d}"  # Q11 left of provided IP
     MATCH_Q11_RIGHT = f"MQ.11R{ip:d}.B{beam:d}"  # Q11 right of provided IP
     SEQUENCE = f"lhcb{beam:d}"  # sequence name, depending on the beam
