@@ -103,7 +103,7 @@ def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, fl
 def prepare_output_directories(outputdir: Path) -> None:
     """
     Creates the proper directories where the output files will be written.
-    
+
     Args:
         outputdir (Path): the path to the main output directory, as given by the user
             at the command line.
