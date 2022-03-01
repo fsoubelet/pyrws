@@ -81,7 +81,6 @@ def plot_waist_shift_betabeatings_comparison(
         if column == "BBX"
         else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
     )
-    axis.set_xlabel(r"$S \ [m]$")
     axis.set_ylabel(ylabel)
     axis.legend()
 
