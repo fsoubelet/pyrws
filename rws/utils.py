@@ -79,6 +79,25 @@ def betabeating(nominal: Array, modified: Array) -> Array:
     return (modified - nominal) / nominal
 
 
+def add_betabeating_columns(dataframe: pd.DataFrame, nominal: pd.DataFrame) -> pd.DataFrame:
+    """
+    Adds coupling ``RDTs`` :math:`\\f_{1001}` and :math:`\\f_{1010}` as well as beta-beating
+    columns to the dataframe.
+
+    Args:
+        dataframe (pd.DataFrame): the `~pd.DataFrame` to add the columns to.
+        nominal (pd.DataFrame): the `~pd.DataFrame` with reference values for the
+            beta-beating calculations.
+
+    Returns:
+        A copy of the original *dataframe* with the new columns added.
+    """
+    df = dataframe.copy(deep=True)
+    df["BBX"] = betabeating(nominal.BETX, df.BETX)
+    df["BBY"] = betabeating(nominal.BETY, df.BETY)
+    return df
+
+
 def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, float]):
     """
     Compute the delta between the modified and nominal knobs, to determine the powering
@@ -107,7 +126,7 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path]
     Args:
         outputdir (Path): the path to the main output directory, as given by the user
             at the command line.
-    
+
     Returns:
         The `~pathlib.Path` objects to the created output directories. In order, these
         are for beam1, beam1 plots, beam2 and beam2 plots.
