@@ -14,9 +14,7 @@ from matplotlib import pyplot as plt
 # ----- Beta-Beating Plotters ----- #
 
 
-def plot_waist_shift_betabeatings(
-    axis: matplotlib.axes.Axes, dataframe: pd.DataFrame, show_ips: bool = False
-) -> None:
+def plot_waist_shift_betabeatings(axis: matplotlib.axes.Axes, dataframe: pd.DataFrame, show_ips: bool = False) -> None:
     """Plots the horizontal and vertical beta-beatings on the given *axis*.
 
     .. note::
@@ -77,9 +75,7 @@ def plot_waist_shift_betabeatings_comparison(
         _highlight_ips_locations(axis, before)
 
     ylabel = (
-        r"$\frac{\Delta \beta_x}{\beta_x} \ [\%]$"
-        if column == "BBX"
-        else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
+        r"$\frac{\Delta \beta_x}{\beta_x} \ [\%]$" if column == "BBX" else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
     )
     axis.set_ylabel(ylabel)
     axis.legend()

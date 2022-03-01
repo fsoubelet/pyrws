@@ -67,9 +67,7 @@ def get_nominal_beam_config(
     matching.match_tunes_and_chromaticities(madx, "lhc", f"lhcb{beam:d}", qx, qy, 2.0, 2.0, calls=200)
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
-    quads_knobs = get_independent_quadrupoles_powering_knobs(
-        madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam
-    )
+    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
     return twiss_df, triplets_knobs, quads_knobs
 
 
@@ -113,9 +111,7 @@ def get_bare_waist_shift_beam1_config(
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
-    quads_knobs = get_independent_quadrupoles_powering_knobs(
-        madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1
-    )
+    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1)
     return twiss_df, triplets_knobs, quads_knobs
 
 
@@ -151,9 +147,7 @@ def get_bare_waist_shift_beam2_config(
         IR quadrupoles powering knobs.
     """
     _, _, _ = get_nominal_beam_config(madx, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
-    logger.debug(
-        f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs"
-    )
+    logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
     logger.debug(f"Triplet knobs are: {triplet_knobs}")
     with madx.batch():
         madx.globals.update(triplet_knobs)
@@ -161,9 +155,7 @@ def get_bare_waist_shift_beam2_config(
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
-    quads_knobs = get_independent_quadrupoles_powering_knobs(
-        madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1
-    )
+    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1)
     return twiss_df, triplets_knobs, quads_knobs
 
 
@@ -263,9 +255,7 @@ def get_matched_waist_shift_config(
         bety=nominal_twiss.BETY[MATCH_Q11_RIGHT],
     )
     # We make a knob varying Q4 to Q10 included and we match
-    lhc.vary_independent_ir_quadrupoles(
-        madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam
-    )
+    lhc.vary_independent_ir_quadrupoles(madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam)
     madx.command.jacobian(calls=25, strategy=3, tolerance=1.0e-21)
     madx.command.endmatch()
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
@@ -273,7 +263,5 @@ def get_matched_waist_shift_config(
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
-    quads_knobs = get_independent_quadrupoles_powering_knobs(
-        madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam
-    )
+    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
     return twiss_df, triplets_knobs, quads_knobs
