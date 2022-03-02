@@ -58,7 +58,7 @@ from rws.utils import (
     help="Which IP to prepare the waist shift knob for. Should be 1 or 5.",
 )
 @click.option(
-    "--waist_shift",
+    "--waist_shift_setting",
     type=click.FloatRange(min=0),
     required=True,
     help="Unit setting of the rigid waist shift." "A value of 1 corresponds to a 0.5% change in the triplets powering.",
@@ -110,7 +110,7 @@ def main(
     sequence: Path,
     opticsfile: Path,
     ip: int,
-    waist_shift: float,
+    waist_shift_setting: float,
     outputdir: Path,
     qx: float,
     qy: float,
@@ -146,7 +146,7 @@ def main(
             madxb1.call(fullpath(opticsfile))
 
             bare_twiss_b1, bare_triplets_b1, bare_quads_b1 = get_bare_waist_shift_beam1_config(
-                madxb1, ip=ip, rigidty_waist_shift_value=waist_shift, qx=qx, qy=qy
+                madxb1, ip=ip, rigidty_waist_shift_value=waist_shift_setting, qx=qx, qy=qy
             )
             bare_twiss_b1 = add_betabeating_columns(bare_twiss_b1, nominal_twiss_b1)
 
@@ -267,21 +267,21 @@ def _generate_beam1_figures(
     logger.info("Generating plots for beam 1")
     fig_b1_bbing_before, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, bare_b1, show_ips=True)
-    axis.set_ylim(-25, 55)
+    # axis.set_ylim(-25, 55)
     axis.set_title("B1 - Waist Shift Induced Beta-Beating")
     fig_b1_bbing_before.savefig(plots_dir / "waist_shift_betabeatings.pdf")
 
     fig_b1_bbing_after, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, matched_b1, show_ips=True)
-    axis.set_ylim(-12, 30)
+    # axis.set_ylim(-12, 30)
     axis.set_title("B1 - Waist Shift Induced Beta-Beating, After Matching")
     fig_b1_bbing_after.savefig(plots_dir / "matched_waist_shift_betabeatings.pdf")
 
     fig_b1_before_vs_after_bbing, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_waist_shift_betabeatings_comparison(axx, bare_b1, matched_b1, column="BBX", show_ips=True)
     plot_waist_shift_betabeatings_comparison(axy, bare_b1, matched_b1, column="BBY", show_ips=True)
-    axx.set_ylim(-30, 50)
-    axy.set_ylim(-30, 50)
+    # axx.set_ylim(-30, 50)
+    # axy.set_ylim(-30, 50)
     axx.set_title("B1 - Horizontal Waist Shift Induced Beta-Beating - Before vs After Matching")
     axy.set_xlabel("S [m]")
     fig_b1_before_vs_after_bbing.savefig(plots_dir / "bare_vs_matched_betabeatings.pdf")
@@ -346,21 +346,21 @@ def _generate_beam2_figures(
     logger.info("Generating plots for beam 2")
     fig_b2_bbing_before, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, bare_b2, show_ips=True)
-    axis.set_ylim(-25, 55)
+    # axis.set_ylim(-25, 55)
     axis.set_title("B2 - Waist Shift Induced Beta-Beating")
     fig_b2_bbing_before.savefig(plots_dir / "waist_shift_betabeatings.pdf")
 
     fig_b2_bbing_after, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, matched_b2, show_ips=True)
-    axis.set_ylim(-12, 30)
+    # axis.set_ylim(-12, 30)
     axis.set_title("B2 - Waist Shift Induced Beta-Beating, After Matching")
     fig_b2_bbing_after.savefig(plots_dir / "matched_waist_shift_betabeatings.pdf")
 
     fig_b2_before_vs_after_bbing, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_waist_shift_betabeatings_comparison(axx, bare_b2, matched_b2, column="BBX", show_ips=True)
     plot_waist_shift_betabeatings_comparison(axy, bare_b2, matched_b2, column="BBY", show_ips=True)
-    axx.set_ylim(-30, 50)
-    axy.set_ylim(-30, 50)
+    # axx.set_ylim(-30, 50)
+    # axy.set_ylim(-30, 50)
     axx.set_title("B2 - Horizontal Waist Shift Induced Beta-Beating - Before vs After Matching")
     axy.set_xlabel("S [m]")
     fig_b2_before_vs_after_bbing.savefig(plots_dir / "bare_vs_matched_betabeatings.pdf")
