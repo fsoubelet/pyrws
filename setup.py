@@ -42,7 +42,14 @@ DEPENDENCIES = [
 # Extra dependencies
 EXTRA_DEPENDENCIES = {
     "test": ["pytest>=5.2", "pytest-cov>=2.9"],
-    "doc": ["sphinx", "sphinx_rtd_theme"],
+    "doc": [
+        "sphinx",
+        "sphinx_rtd_theme",
+        "sphinx-copybutton<1.0",
+        "sphinxcontrib-bibtex>=2.4",
+        "sphinx-panels<1.0",
+        "sphinx-prompt>=1.5",
+    ],
 }
 EXTRA_DEPENDENCIES.update({"all": [elem for list_ in EXTRA_DEPENDENCIES.values() for elem in list_]})
 
