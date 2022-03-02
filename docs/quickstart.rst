@@ -71,52 +71,53 @@ To see these options, refer to the :ref:`following page <rws-cli>`.
             
             waist_shift
             ├── BEAM1
-            │   ├── KNOBS
-            │   │   ├── quadrupoles.madx
-            │   │   ├── quadrupoles_change.madx
-            │   │   ├── triplets.madx
-            │   │   └── triplets_change.madx
-            │   ├── PLOTS
-            │   │   ├── bare_vs_matched_betabeatings.pdf
-            │   │   ├── betas.pdf
-            │   │   ├── betas_deviations.pdf
-            │   │   ├── matched_waist_shift_betabeatings.pdf
-            │   │   ├── phase_advances.pdf
-            │   │   ├── phase_differences.pdf
-            │   │   └── waist_shift_betabeatings.pdf
-            │   ├── TFS
-            │   ├── bare_waist_b1.tfs
-            │   ├── bare_waist_b1_monitors.tfs
-            │   ├── matched_waist_b1.tfs
-            │   ├── matched_waist_b1_monitors.tfs
-            │   ├── nominal_b1.madx
-            │   ├── nominal_b1.out
-            │   ├── nominal_b1.tfs
-            │   ├── nominal_b1_monitors.tfs
-            │   ├── waist_b1.madx
-            │   └── waist_b1.out
+            │   ├── KNOBS
+            │   │   ├── quadrupoles.madx
+            │   │   ├── quadrupoles_change.madx
+            │   │   ├── triplets.madx
+            │   │   └── triplets_change.madx
+            │   ├── PLOTS
+            │   │   ├── bare_vs_matched_betabeatings.pdf
+            │   │   ├── betas.pdf
+            │   │   ├── betas_deviations.pdf
+            │   │   ├── matched_waist_shift_betabeatings.pdf
+            │   │   ├── phase_advances.pdf
+            │   │   ├── phase_differences.pdf
+            │   │   └── waist_shift_betabeatings.pdf
+            │   ├── TFS
+            │   │   ├── bare_waist_b1.tfs
+            │   │   ├── bare_waist_b1_monitors.tfs
+            │   │   ├── matched_waist_b1.tfs
+            │   │   ├── matched_waist_b1_monitors.tfs
+            │   │   ├── nominal_b1.tfs
+            │   │   └── nominal_b1_monitors.tfs
+            │   ├── nominal_b1.madx
+            │   ├── nominal_b1.out
+            │   ├── waist_b1.madx
+            │   └── waist_b1.out
             └── BEAM2
                 ├── KNOBS
-                │   ├── quadrupoles.madx
-                │   ├── quadrupoles_change.madx
-                │   ├── triplets.madx
-                │   └── triplets_change.madx
+                │   ├── quadrupoles.madx
+                │   ├── quadrupoles_change.madx
+                │   ├── triplets.madx
+                │   └── triplets_change.madx
                 ├── PLOTS
-                │   ├── bare_vs_matched_betabeatings.pdf
-                │   ├── betas.pdf
-                │   ├── betas_deviations.pdf
-                │   ├── matched_waist_shift_betabeatings.pdf
-                │   ├── phase_advances.pdf
-                │   ├── phase_differences.pdf
-                │   └── waist_shift_betabeatings.pdf
-                ├── bare_waist_b2.tfs
-                ├── bare_waist_b2_monitors.tfs
-                ├── matched_waist_b2.tfs
-                ├── matched_waist_b2_monitors.tfs
+                │   ├── bare_vs_matched_betabeatings.pdf
+                │   ├── betas.pdf
+                │   ├── betas_deviations.pdf
+                │   ├── matched_waist_shift_betabeatings.pdf
+                │   ├── phase_advances.pdf
+                │   ├── phase_differences.pdf
+                │   └── waist_shift_betabeatings.pdf
+                ├── TFS
+                │   ├── bare_waist_b2.tfs
+                │   ├── bare_waist_b2_monitors.tfs
+                │   ├── matched_waist_b2.tfs
+                │   ├── matched_waist_b2_monitors.tfs
+                │   ├── nominal_b2.tfs
+                │   └── nominal_b2_monitors.tfs
                 ├── nominal_b2.madx
                 ├── nominal_b2.out
-                ├── nominal_b2.tfs
-                ├── nominal_b2_monitors.tfs
                 ├── waist_b2.madx
                 └── waist_b2.out
 
