@@ -119,19 +119,12 @@ def main(
     loglevel: str,
 ):
     config_logger(level=loglevel)
-    (
-        beam1_dir,
-        beam1_knobs_dir,
-        beam1_plots_dir,
-        beam2_dir,
-        beam2_knobs_dir,
-        beam2_plots_dir,
-    ) = prepare_output_directories(outputdir)
+    b1_dir, b1_knobs_dir, b1_plots_dir, b2_dir, b2_knobs_dir, b2_plots_dir = prepare_output_directories(outputdir)
 
     # ----- Beam 1 Nominal ----- #
     logger.info("Preparing beam 1 nominal configuration")
-    nominal_b1_in = beam1_dir / "nominal_b1.madx"
-    nominal_b1_out = beam1_dir / "nominal_b1.out"
+    nominal_b1_in = b1_dir / "nominal_b1.madx"
+    nominal_b1_out = b1_dir / "nominal_b1.out"
     with nominal_b1_in.open("w") as commands, nominal_b1_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb1:
             madxb1.option(echo=False, warn=False)
@@ -144,8 +137,8 @@ def main(
 
     # ----- Beam 1 Waist Shift ----- #
     logger.info("Preparing beam 1 waist shift configuration")
-    waist_b1_in = beam1_dir / "waist_b1.madx"
-    waist_b1_out = beam1_dir / "waist_b1.out"
+    waist_b1_in = b1_dir / "waist_b1.madx"
+    waist_b1_out = b1_dir / "waist_b1.out"
     with waist_b1_in.open("w") as commands, waist_b1_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb1:
             madxb1.option(echo=False, warn=False)
@@ -165,14 +158,14 @@ def main(
 
     # ----- Beam 1 Output Files ----- #
     logger.info("Writing out TFS files for beam 1")
-    tfs.write(beam1_dir / "nominal_b1.tfs", nominal_twiss_b1, save_index="NAME")
-    tfs.write(beam1_dir / "bare_waist_b1.tfs", bare_twiss_b1, save_index="NAME")
-    tfs.write(beam1_dir / "matched_waist_b1.tfs", matched_twiss_b1, save_index="NAME")
+    tfs.write(b1_dir / "nominal_b1.tfs", nominal_twiss_b1, save_index="NAME")
+    tfs.write(b1_dir / "bare_waist_b1.tfs", bare_twiss_b1, save_index="NAME")
+    tfs.write(b1_dir / "matched_waist_b1.tfs", matched_twiss_b1, save_index="NAME")
 
     # ----- Beam 2 Nominal ----- #
     logger.info("Preparing beam 2 nominal configuration")
-    nominal_b2_in = beam2_dir / "nominal_b2.madx"
-    nominal_b2_out = beam2_dir / "nominal_b2.out"
+    nominal_b2_in = b2_dir / "nominal_b2.madx"
+    nominal_b2_out = b2_dir / "nominal_b2.out"
     with nominal_b2_in.open("w") as commands, nominal_b2_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb2:
             madxb2.option(echo=False, warn=False)
@@ -185,8 +178,8 @@ def main(
 
     # ----- Beam 2 Waist Shift ----- #
     logger.info("Preparing beam 1 waist shift configuration")
-    waist_b2_in = beam2_dir / "waist_b2.madx"
-    waist_b2_out = beam2_dir / "waist_b2.out"
+    waist_b2_in = b2_dir / "waist_b2.madx"
+    waist_b2_out = b2_dir / "waist_b2.out"
     with waist_b2_in.open("w") as commands, waist_b2_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb2:
             madxb2.option(echo=False, warn=False)
@@ -206,30 +199,30 @@ def main(
 
     # ----- Beam 2 Output Files ----- #
     logger.info("Writing out TFS files for beam 2")
-    tfs.write(beam2_dir / "nominal_b2.tfs", nominal_twiss_b2, save_index="NAME")
-    tfs.write(beam2_dir / "bare_waist_b2.tfs", bare_twiss_b2, save_index="NAME")
-    tfs.write(beam2_dir / "matched_waist_b2.tfs", matched_twiss_b2, save_index="NAME")
+    tfs.write(b2_dir / "nominal_b2.tfs", nominal_twiss_b2, save_index="NAME")
+    tfs.write(b2_dir / "bare_waist_b2.tfs", bare_twiss_b2, save_index="NAME")
+    tfs.write(b2_dir / "matched_waist_b2.tfs", matched_twiss_b2, save_index="NAME")
 
     # ----- Quick Sanity check ----- #
     assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"
 
     # ----- Write B1 Knobs ----- #
     logger.info("Writing B1 knob powerings and deltas to disk")
-    write_knob_powering(beam1_knobs_dir / "triplets.madx", matched_triplets_b1)
-    write_knob_powering(beam1_knobs_dir / "quadrupoles.madx", matched_quads_b1)
-    write_knob_delta(beam1_knobs_dir / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
-    write_knob_delta(beam1_knobs_dir / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
+    write_knob_powering(b1_knobs_dir / "triplets.madx", matched_triplets_b1)
+    write_knob_powering(b1_knobs_dir / "quadrupoles.madx", matched_quads_b1)
+    write_knob_delta(b1_knobs_dir / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
+    write_knob_delta(b1_knobs_dir / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
 
     # ----- Write B2 Knobs ----- #
     logger.info("Writing B2 knob powerings and deltas to disk")
-    write_knob_powering(beam2_knobs_dir / "triplets.madx", matched_triplets_b2)
-    write_knob_powering(beam2_knobs_dir / "quadrupoles.madx", matched_quads_b2)
-    write_knob_delta(beam2_knobs_dir / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
-    write_knob_delta(beam2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2)
+    write_knob_powering(b2_knobs_dir / "triplets.madx", matched_triplets_b2)
+    write_knob_powering(b2_knobs_dir / "quadrupoles.madx", matched_quads_b2)
+    write_knob_delta(b2_knobs_dir / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
+    write_knob_delta(b2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2)
 
     # ----- Generate Plots ----- #
     b1_figures = _generate_beam1_figures(
-        plots_dir=beam1_plots_dir,
+        plots_dir=b1_plots_dir,
         nominal_b1=nominal_twiss_b1,
         bare_b1=bare_twiss_b1,
         matched_b1=matched_twiss_b1,
@@ -237,7 +230,7 @@ def main(
         figsize=figsize,
     )
     b2_figures = _generate_beam2_figures(
-        plots_dir=beam2_plots_dir,
+        plots_dir=b2_plots_dir,
         nominal_b2=nominal_twiss_b2,
         bare_b2=bare_twiss_b2,
         matched_b2=matched_twiss_b2,
