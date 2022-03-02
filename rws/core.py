@@ -17,12 +17,11 @@ from loguru import logger
 from optics_functions.coupling import coupling_via_cmatrix
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 
+from rws.constants import VARIED_IR_QUADRUPOLES
 from rws.utils import (
     get_independent_quadrupoles_powering_knobs,
     get_triplets_powering_knobs,
 )
-
-VARIED_IR_QUADRUPOLES = list(range(4, 11))
 
 # ----- Nominal Setup ----- #
 
