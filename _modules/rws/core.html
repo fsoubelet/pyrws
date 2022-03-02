@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rws.core &mdash; rws 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-variables.4b15212bc2faf4da239d738a7cf8e545.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> rws
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#using-the-commandline-tool">Using the CommandLine Tool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#program-worfklow">Program Worfklow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">RWS Command Line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#rws">rws</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#module-rws.constants">RWS Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#useful-constants">Useful Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#core-functionality">Core Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#plotting-functions">Plotting Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#utilities">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rws</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>rws.core</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rws.core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _core:</span>
+
+<span class="sd">Core Functionality</span>
+<span class="sd">------------------</span>
+
+<span class="sd">Module with functions to perform the rigid waist shift and matching through a</span>
+<span class="sd">`~cpymad.madx.Madx` object.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tfs</span>
+<span class="kn">from</span> <span class="nn">cpymad.madx</span> <span class="kn">import</span> <span class="n">Madx</span>
+<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools</span> <span class="kn">import</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">matching</span><span class="p">,</span> <span class="n">orbit</span><span class="p">,</span> <span class="n">twiss</span>
+
+<span class="kn">from</span> <span class="nn">rws.constants</span> <span class="kn">import</span> <span class="n">VARIED_IR_QUADRUPOLES</span>
+<span class="kn">from</span> <span class="nn">rws.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">,</span>
+    <span class="n">get_triplets_powering_knobs</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># ----- Nominal Setup ----- #</span>
+
+
+<div class="viewcode-block" id="get_nominal_beam_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_nominal_beam_config">[docs]</a><span class="k">def</span> <span class="nf">get_nominal_beam_config</span><span class="p">(</span>
+    <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provided with an active `~cpymad.madx.Madx` object, will match to the working point defined</span>
+<span class="sd">    by the provided tunes *qx* and *qy* and return the nominal configuration for the provided *beam*</span>
+<span class="sd">    (twiss table, triplet knobs, independent IR quadrupoles knobs).</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        This will re-cycle the appropriate sequence from ``MSIA.EXIT.B[12]`` point, create **lhcb1**</span>
+<span class="sd">        and **lhcb2** beams for 6.8 TeV, setup a flat orbit configuration (crossing angles, separation</span>
+<span class="sd">        bumps at 0 etc.) and use the appropriate sequence for the provided *beam*.</span>
+
+<span class="sd">    .. warning::</span>
+<span class="sd">        IN OPERATION IN THE CCC, REMEMBER TO LEAVE THE ORBIT FEEDBACK ON!</span>
+
+<span class="sd">    .. important::</span>
+<span class="sd">        It is assumed that the sequence and opticsfile have already been called beforehand.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.</span>
+<span class="sd">        beam (int): the beam number, should be 1 or 2.</span>
+<span class="sd">        ip (int): the IP for which to get triplets and independent quadrupoles powering</span>
+<span class="sd">            knobs values.</span>
+<span class="sd">        qx (float): the horizontal tune to match to.</span>
+<span class="sd">        qy (float): the vertical tune to match to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names</span>
+<span class="sd">        and values of the triplets powering knobs and a `dict` with the names and values of the independent</span>
+<span class="sd">        IR quadrupoles powering knobs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">beam</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ip</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting up nominal beam and matching tunes&quot;</span><span class="p">)</span>
+    <span class="n">lhc</span><span class="o">.</span><span class="n">re_cycle_sequence</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;lhcb</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;MSIA.EXIT.B</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">lhc</span><span class="o">.</span><span class="n">make_lhc_beams</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">energy</span><span class="o">=</span><span class="mi">6800</span><span class="p">,</span> <span class="n">emittance</span><span class="o">=</span><span class="mf">3.75e-6</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">orbit</span><span class="o">.</span><span class="n">setup_lhc_orbit</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;flat&quot;</span><span class="p">)</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;lhcb</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">matching</span><span class="o">.</span><span class="n">match_tunes_and_chromaticities</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="s2">&quot;lhc&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;lhcb</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">calls</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">twiss_df</span> <span class="o">=</span> <span class="n">twiss</span><span class="o">.</span><span class="n">get_twiss_tfs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">chrom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">triplets_knobs</span> <span class="o">=</span> <span class="n">get_triplets_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+    <span class="n">quads_knobs</span> <span class="o">=</span> <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">quad_numbers</span><span class="o">=</span><span class="n">VARIED_IR_QUADRUPOLES</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="n">beam</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">twiss_df</span><span class="p">,</span> <span class="n">triplets_knobs</span><span class="p">,</span> <span class="n">quads_knobs</span></div>
+
+
+<span class="c1"># ----- Implement Bare Waist Shift ----- #</span>
+
+
+<div class="viewcode-block" id="get_bare_waist_shift_beam1_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_bare_waist_shift_beam1_config">[docs]</a><span class="k">def</span> <span class="nf">get_bare_waist_shift_beam1_config</span><span class="p">(</span>
+    <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rigidty_waist_shift_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding</span>
+<span class="sd">    configuration for beam 1 (twiss table, triplet knobs, independent IR quadrupoles knobs).</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        All the caveats of applying the rigid waist shift apply here as well. For more information</span>
+<span class="sd">        see the documentation of `pyhdtoolkit.cpymadtools.lhc.apply_lhc_rigidity_waist_shift_knob`.</span>
+
+<span class="sd">    .. important::</span>
+<span class="sd">        It is assumed that the sequence and opticsfile have already been called beforehand.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.</span>
+<span class="sd">        ip (int): the IP at which to apply the rigid waist shift.</span>
+<span class="sd">        rigidty_waist_shift_value (float): applied unit setting of the rigidity</span>
+<span class="sd">            waist shift knob. A value of 1 changes the powering of the triplets</span>
+<span class="sd">            knob by 0.5%.</span>
+<span class="sd">        qx (float): the horizontal tune to re-match to after applying the rigid</span>
+<span class="sd">            waist shift.</span>
+<span class="sd">        qy (float): the vertical tune to re-match to after applying the rigit</span>
+<span class="sd">            waist shift.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names</span>
+<span class="sd">        and values of the triplets powering knobs and a `dict` with the names and values of the independent</span>
+<span class="sd">        IR quadrupoles powering knobs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_nominal_beam_config</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">qx</span><span class="o">=</span><span class="n">qx</span> <span class="o">-</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">qy</span><span class="o">=</span><span class="n">qy</span> <span class="o">+</span> <span class="mf">0.04</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applying rigidity waist shift to beam 1 at IP</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">lhc</span><span class="o">.</span><span class="n">apply_lhc_rigidity_waist_shift_knob</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">rigidty_waist_shift_value</span><span class="o">=</span><span class="n">rigidty_waist_shift_value</span><span class="p">,</span> <span class="n">ir</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+    <span class="n">matching</span><span class="o">.</span><span class="n">match_tunes_and_chromaticities</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="s2">&quot;lhc&quot;</span><span class="p">,</span> <span class="s2">&quot;lhcb1&quot;</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">calls</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="n">twiss_df</span> <span class="o">=</span> <span class="n">twiss</span><span class="o">.</span><span class="n">get_twiss_tfs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">chrom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">triplets_knobs</span> <span class="o">=</span> <span class="n">get_triplets_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+    <span class="n">quads_knobs</span> <span class="o">=</span> <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">quad_numbers</span><span class="o">=</span><span class="n">VARIED_IR_QUADRUPOLES</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">twiss_df</span><span class="p">,</span> <span class="n">triplets_knobs</span><span class="p">,</span> <span class="n">quads_knobs</span></div>
+
+
+<div class="viewcode-block" id="get_bare_waist_shift_beam2_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_bare_waist_shift_beam2_config">[docs]</a><span class="k">def</span> <span class="nf">get_bare_waist_shift_beam2_config</span><span class="p">(</span>
+    <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">triplet_knobs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding</span>
+<span class="sd">    configuration for beam 1 (twiss table, triplet knobs, independent IR quadrupoles knobs).</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        This is similar to `~.get_bare_waist_shift_beam1_config` except that instead of applying the</span>
+<span class="sd">        waist shift with a unit setting, it applies to powering knob for the triplets that were</span>
+<span class="sd">        determined for beam 1. This is because the powering circuit is identical for beam 1 and beam</span>
+<span class="sd">        2 triplets, so we need to make sure they are powered the same.</span>
+
+<span class="sd">    .. important::</span>
+<span class="sd">        It is assumed that the sequence and opticsfile have already been called beforehand.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.</span>
+<span class="sd">        ip (int): the IP at which to apply the rigid waist shift.</span>
+<span class="sd">        triplet_knobs (float): the triplets powering knob values for the given *ip*, as returned by</span>
+<span class="sd">            `~.get_bare_waist_shift_beam1_config`.</span>
+<span class="sd">        qx (float): the horizontal tune to re-match to after applying the rigid</span>
+<span class="sd">            waist shift.</span>
+<span class="sd">        qy (float): the vertical tune to re-match to after applying the rigit</span>
+<span class="sd">            waist shift.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names</span>
+<span class="sd">        and values of the triplets powering knobs and a `dict` with the names and values of the independent</span>
+<span class="sd">        IR quadrupoles powering knobs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_nominal_beam_config</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">qx</span><span class="o">=</span><span class="n">qx</span> <span class="o">-</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">qy</span><span class="o">=</span><span class="n">qy</span> <span class="o">+</span> <span class="mf">0.04</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applying rigidity waist shift to beam 2 at IP</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, as determined by the beam 1 triplet knobs&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Triplet knobs are: </span><span class="si">{</span><span class="n">triplet_knobs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">madx</span><span class="o">.</span><span class="n">batch</span><span class="p">():</span>
+        <span class="n">madx</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">triplet_knobs</span><span class="p">)</span>
+    <span class="n">matching</span><span class="o">.</span><span class="n">match_tunes_and_chromaticities</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="s2">&quot;lhc&quot;</span><span class="p">,</span> <span class="s2">&quot;lhcb2&quot;</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">calls</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="n">twiss_df</span> <span class="o">=</span> <span class="n">twiss</span><span class="o">.</span><span class="n">get_twiss_tfs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">chrom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">triplets_knobs</span> <span class="o">=</span> <span class="n">get_triplets_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+    <span class="n">quads_knobs</span> <span class="o">=</span> <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">quad_numbers</span><span class="o">=</span><span class="n">VARIED_IR_QUADRUPOLES</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">twiss_df</span><span class="p">,</span> <span class="n">triplets_knobs</span><span class="p">,</span> <span class="n">quads_knobs</span></div>
+
+
+<span class="c1"># ----- Match for the Improved Waist Shift ----- #</span>
+
+
+<div class="viewcode-block" id="get_matched_waist_shift_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_matched_waist_shift_config">[docs]</a><span class="k">def</span> <span class="nf">get_matched_waist_shift_config</span><span class="p">(</span>
+    <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span>
+    <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">nominal_twiss</span><span class="p">:</span> <span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span>
+    <span class="n">bare_twiss</span><span class="p">:</span> <span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span>
+    <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs relevant matchings to improve the rigid waist shift at the provided *ip* for beam 1,</span>
+<span class="sd">    and returns the corresponding configuration for beam the provided *beam* (twiss table, triplet</span>
+<span class="sd">    knobs, independent IR quadrupoles knobs).</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        There is a bunch of hard-coded logic in this function, such as the matching points location</span>
+<span class="sd">        etc.</span>
+
+<span class="sd">    .. important::</span>
+<span class="sd">        This assumes to whole setups from `~.get_nominal_beam_config` and then</span>
+<span class="sd">        `~.get_bare_waist_shift_beam1_config` or `~.get_bare_waist_shift_beam2_config` have been</span>
+<span class="sd">        called beforehand (aka the waist shift is applied).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.</span>
+<span class="sd">        beam (int): the beam number, should be 1 or 2.</span>
+<span class="sd">        ip (int): the IP at which to apply the rigid waist shift.</span>
+<span class="sd">        nominal_twiss (tfs.TfsDataFrame): the `~tfs.TfsDataFrame` with the ``TWISS`` table from the</span>
+<span class="sd">            nominal scenario, which is used to determine matching constraint values.</span>
+<span class="sd">        bare_twiss (tfs.TfsDataFrame): the `~tfs.TfsDataFrame` with the ``TWISS`` table from the</span>
+<span class="sd">            bare waist shift scenario, which is used to determine matching constraint values.</span>
+<span class="sd">        qx (float): the horizontal tune to re-match to after applying the rigid</span>
+<span class="sd">            waist shift.</span>
+<span class="sd">        qy (float): the vertical tune to re-match to after applying the rigit</span>
+<span class="sd">            waist shift.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names</span>
+<span class="sd">        and values of the triplets powering knobs and a `dict` with the names and values of the independent</span>
+<span class="sd">        IR quadrupoles powering knobs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">beam</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ip</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Defining matching points to improve the waist shift&quot;</span><span class="p">)</span>
+    <span class="n">MATCH_IP_POINT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;IP</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># IP marker</span>
+    <span class="n">MATCH_Q3_LEFT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MQXA.3L</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Q3 left of provided IP</span>
+    <span class="n">MATCH_Q3_RIGHT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MQXA.3R</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Q3 right of provided IP</span>
+    <span class="n">MATCH_Q11_LEFT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MQ.11L</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">.B</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Q11 left of provided IP</span>
+    <span class="n">MATCH_Q11_RIGHT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MQ.11R</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">.B</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Q11 right of provided IP</span>
+    <span class="n">SEQUENCE</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;lhcb</span><span class="si">{</span><span class="n">beam</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># sequence name, depending on the beam</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;Match point names are: &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">MATCH_IP_POINT</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">MATCH_Q3_LEFT</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">MATCH_Q3_RIGHT</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">MATCH_Q11_LEFT</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">MATCH_Q11_RIGHT</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Matching for the beta-functions and dispersion&quot;</span><span class="p">)</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">SEQUENCE</span><span class="p">,</span> <span class="n">chrom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># First we give constraints for the IP point, same as in the bare waist</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="o">=</span><span class="n">SEQUENCE</span><span class="p">,</span>
+        <span class="n">range_</span><span class="o">=</span><span class="n">MATCH_IP_POINT</span><span class="p">,</span>
+        <span class="n">betx</span><span class="o">=</span><span class="n">bare_twiss</span><span class="o">.</span><span class="n">BETX</span><span class="p">[</span><span class="n">MATCH_IP_POINT</span><span class="p">],</span>
+        <span class="n">bety</span><span class="o">=</span><span class="n">bare_twiss</span><span class="o">.</span><span class="n">BETY</span><span class="p">[</span><span class="n">MATCH_IP_POINT</span><span class="p">],</span>
+        <span class="n">dx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Then constraints at Q3 matching points, also same as in the bare waist</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="o">=</span><span class="n">SEQUENCE</span><span class="p">,</span>
+        <span class="n">range_</span><span class="o">=</span><span class="n">MATCH_Q3_LEFT</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="n">betx</span><span class="o">=</span><span class="n">bare_twiss</span><span class="o">.</span><span class="n">BETX</span><span class="p">[</span><span class="n">MATCH_Q3_LEFT</span><span class="p">],</span>
+        <span class="n">bety</span><span class="o">=</span><span class="n">bare_twiss</span><span class="o">.</span><span class="n">BETY</span><span class="p">[</span><span class="n">MATCH_Q3_LEFT</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="o">=</span><span class="n">SEQUENCE</span><span class="p">,</span>
+        <span class="n">range_</span><span class="o">=</span><span class="n">MATCH_Q3_RIGHT</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="n">betx</span><span class="o">=</span><span class="n">bare_twiss</span><span class="o">.</span><span class="n">BETX</span><span class="p">[</span><span class="n">MATCH_Q3_RIGHT</span><span class="p">],</span>
+        <span class="n">bety</span><span class="o">=</span><span class="n">bare_twiss</span><span class="o">.</span><span class="n">BETY</span><span class="p">[</span><span class="n">MATCH_Q3_RIGHT</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="c1"># Then constraints at Q11 matching points, now the same as in the nominal scenario</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="o">=</span><span class="n">SEQUENCE</span><span class="p">,</span>
+        <span class="n">range_</span><span class="o">=</span><span class="n">MATCH_Q11_LEFT</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="n">betx</span><span class="o">=</span><span class="n">nominal_twiss</span><span class="o">.</span><span class="n">BETX</span><span class="p">[</span><span class="n">MATCH_Q11_LEFT</span><span class="p">],</span>
+        <span class="n">bety</span><span class="o">=</span><span class="n">nominal_twiss</span><span class="o">.</span><span class="n">BETY</span><span class="p">[</span><span class="n">MATCH_Q11_LEFT</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="o">=</span><span class="n">SEQUENCE</span><span class="p">,</span>
+        <span class="n">range_</span><span class="o">=</span><span class="n">MATCH_Q11_RIGHT</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="n">betx</span><span class="o">=</span><span class="n">nominal_twiss</span><span class="o">.</span><span class="n">BETX</span><span class="p">[</span><span class="n">MATCH_Q11_RIGHT</span><span class="p">],</span>
+        <span class="n">bety</span><span class="o">=</span><span class="n">nominal_twiss</span><span class="o">.</span><span class="n">BETY</span><span class="p">[</span><span class="n">MATCH_Q11_RIGHT</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="c1"># We make a knob varying Q4 to Q10 included and we match</span>
+    <span class="n">lhc</span><span class="o">.</span><span class="n">vary_independent_ir_quadrupoles</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">quad_numbers</span><span class="o">=</span><span class="n">VARIED_IR_QUADRUPOLES</span><span class="p">,</span> <span class="n">sides</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="n">beam</span><span class="p">)</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">calls</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1.0e-21</span><span class="p">)</span>
+    <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">endmatch</span><span class="p">()</span>
+    <span class="c1"># Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift</span>
+    <span class="n">matching</span><span class="o">.</span><span class="n">match_tunes_and_chromaticities</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="s2">&quot;lhc&quot;</span><span class="p">,</span> <span class="n">SEQUENCE</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">calls</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="n">twiss_df</span> <span class="o">=</span> <span class="n">twiss</span><span class="o">.</span><span class="n">get_twiss_tfs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">chrom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">triplets_knobs</span> <span class="o">=</span> <span class="n">get_triplets_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+    <span class="n">quads_knobs</span> <span class="o">=</span> <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">quad_numbers</span><span class="o">=</span><span class="n">VARIED_IR_QUADRUPOLES</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="n">beam</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">twiss_df</span><span class="p">,</span> <span class="n">triplets_knobs</span><span class="p">,</span> <span class="n">quads_knobs</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Felix Soubelet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: 67.5%; }
+  </style>
+
+
+
+</body>
+</html>

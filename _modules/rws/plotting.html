@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rws.plotting &mdash; rws 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/panels-variables.4b15212bc2faf4da239d738a7cf8e545.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> rws
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#using-the-commandline-tool">Using the CommandLine Tool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#program-worfklow">Program Worfklow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">RWS Command Line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#rws">rws</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#module-rws.constants">RWS Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#useful-constants">Useful Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#core-functionality">Core Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#plotting-functions">Plotting Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#utilities">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rws</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>rws.plotting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rws.plotting</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _plotting:</span>
+
+<span class="sd">Plotting Functions</span>
+<span class="sd">------------------</span>
+
+<span class="sd">Module with functions to create different plots relevant to the rigid waist shift configurations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># ----- Beta-Beating Plotters ----- #</span>
+
+
+<div class="viewcode-block" id="plot_waist_shift_betabeatings"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_waist_shift_betabeatings">[docs]</a><span class="k">def</span> <span class="nf">plot_waist_shift_betabeatings</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Plots the horizontal and vertical beta-beatings on the given *axis*.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        It is expected that the *dataframe* contains ``BBX`` and ``BBY`` columns, with respectively</span>
+<span class="sd">        the horizontal and vertical beta-beating values to plot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axis (matplotlib.axes.Axes): the `~matplotlib.axes.Axes` object on which to plot.</span>
+<span class="sd">        dataframe (pd.DataFrame): the `~pd.DataFrame` containing the beta-beating values to plot along</span>
+<span class="sd">            the longitudinal coordinate ``S``.</span>
+<span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting waist shift induced beta-beating.&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">BBX</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x / \beta_x$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">BBY</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y / \beta_y$&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
+        <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">)</span>
+
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$S \ [m]$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_{x,y}}{\beta_{x,y}} \ [\%]$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="plot_waist_shift_betabeatings_comparison"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_waist_shift_betabeatings_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_waist_shift_betabeatings_comparison</span><span class="p">(</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">before</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">after</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BBX&quot;</span><span class="p">,</span>
+    <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Plots the before and after matching beta-beatings on the given *axis*.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        It is expected that the *before* and *after* dataframes both contain ``BBX`` and</span>
+<span class="sd">        ``BBY`` columns, with respectively the horizontal and vertical beta-beating values</span>
+<span class="sd">        to plot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axis (matplotlib.axes.Axes): the `~matplotlib.axes.Axes` object on which to plot.</span>
+<span class="sd">        before (pd.DataFrame): the `~pd.DataFrame` containing the beta-beating values along</span>
+<span class="sd">            the longitudinal coordinate ``S``, for the bare waist shift implementation.</span>
+<span class="sd">        after (pd.DataFrame): the `~pd.DataFrame` containing the beta-beating values along</span>
+<span class="sd">            the longitudinal coordinate ``S``, for the improved waist shift implementation</span>
+<span class="sd">            (a.k.a. after matching).</span>
+<span class="sd">        column (str): the column to plot. Should be one of ``BBX`` or ``BBY``. Defaults to ``BBX``</span>
+<span class="sd">            for the horizontal beta-beating.</span>
+<span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;BBX&quot;</span><span class="p">,</span> <span class="s2">&quot;BBY&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting waist shift induced beta-beating before and after matching.&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bare Waist Shift&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">after</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Improved Waist Shift&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
+        <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">before</span><span class="p">)</span>
+
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_x}{\beta_x} \ [\%]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BBX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_y}{\beta_y} \ [\%]$&quot;</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<span class="c1"># ----- Beta Functions Plotters ----- #</span>
+
+
+<div class="viewcode-block" id="plot_betas_comparison"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_betas_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_betas_comparison</span><span class="p">(</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">nominal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">before</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">after</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BETX&quot;</span><span class="p">,</span>
+    <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the ..math:`\beta` functions across the machine for the nominal, bare waist shift</span>
+<span class="sd">    and improved waist shift scenarii on the given *axis*.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axis (matplotlib.axes.Axes): the `~matplotlib.axes.Axes` object on which to plot.</span>
+<span class="sd">        nominal (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the nominal</span>
+<span class="sd">            model.</span>
+<span class="sd">        before (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the bare waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        after (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the improved waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        column (str): the column to plot. Should be one of ``BETX`` or ``BETY``. Defaults to ``BETX``</span>
+<span class="sd">            for the horizontal beta-functions.</span>
+<span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;BETX&quot;</span><span class="p">,</span> <span class="s2">&quot;BETY&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting beta functions for nominal, bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta_x^</span><span class="si">{nominal}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\beta_y^</span><span class="si">{nominal}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta_x^</span><span class="si">{bare}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\beta_y^</span><span class="si">{bare}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">after</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\beta_x^</span><span class="si">{improved}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\beta_y^</span><span class="si">{improved}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
+        <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
+
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\beta_</span><span class="si">{x}</span><span class="s2"> \ [m]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\beta_</span><span class="si">{y}</span><span class="s2"> \ [m]$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="plot_betas_deviation"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_betas_deviation">[docs]</a><span class="k">def</span> <span class="nf">plot_betas_deviation</span><span class="p">(</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">nominal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">before</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">after</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BETX&quot;</span><span class="p">,</span>
+    <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the ..math:`\beta` functions deviation from the nominal case across the machine for</span>
+<span class="sd">    the bare waist shift and improved waist shift scenarii on the given *axis*.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axis (matplotlib.axes.Axes): the `~matplotlib.axes.Axes` object on which to plot.</span>
+<span class="sd">        nominal (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the nominal</span>
+<span class="sd">            model.</span>
+<span class="sd">        before (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the bare waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        after (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the improved waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        column (str): the column to plot. Should be one of ``BETX`` or ``BETY``. Defaults to ``BETX``</span>
+<span class="sd">            for the horizontal beta-functions.</span>
+<span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;BETX&quot;</span><span class="p">,</span> <span class="s2">&quot;BETY&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;Plotting beta functions deviation from nominal, for bare waist shift and improved waist shift scenarii.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">-</span> <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x^</span><span class="si">{bare}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y^</span><span class="si">{bare}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">after</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">-</span> <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x^</span><span class="si">{improved}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y^</span><span class="si">{improved}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
+        <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
+
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_</span><span class="si">{x}</span><span class="s2"> \ [m]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_</span><span class="si">{y}</span><span class="s2"> \ [m]$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<span class="c1"># ----- Phase Advance Plotters ----- #</span>
+
+
+<div class="viewcode-block" id="plot_phase_advances_comparison"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_phase_advances_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_phase_advances_comparison</span><span class="p">(</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">nominal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">before</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">after</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;MUX&quot;</span><span class="p">,</span>
+    <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the phase advances (..math:`\mu_{x,y}`) across the machine for the nominal, bare waist</span>
+<span class="sd">    shift and improved waist shift scenarii on the given *axis*.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axis (matplotlib.axes.Axes): the `~matplotlib.axes.Axes` object on which to plot.</span>
+<span class="sd">        nominal (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the nominal</span>
+<span class="sd">            model.</span>
+<span class="sd">        before (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the bare waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        after (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the improved waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        column (str): the column to plot. Should be one of ``MUX`` or ``MUY``. Defaults to ``MUX``</span>
+<span class="sd">            for the horizontal phase advances.</span>
+<span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;MUX&quot;</span><span class="p">,</span> <span class="s2">&quot;MUY&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mu_x^</span><span class="si">{nominal}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\mu_y^</span><span class="si">{nominal}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mu_x^</span><span class="si">{bare}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\mu_y^</span><span class="si">{bare}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+        <span class="n">after</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mu_x^</span><span class="si">{improved}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\mu_y^</span><span class="si">{improved}</span><span class="s2">$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
+        <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
+
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{x}</span><span class="s2"> \ [2 \pi]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{y}</span><span class="s2"> \ [2 \pi]$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="plot_phase_differences"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_phase_differences">[docs]</a><span class="k">def</span> <span class="nf">plot_phase_differences</span><span class="p">(</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">nominal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">before</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">after</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the phase advances (..math:`\mu_{x,y}`) across the machine for the nominal, bare waist</span>
+<span class="sd">    shift and improved waist shift scenarii on the given *axis*.</span>
+
+<span class="sd">    .. hint::</span>
+<span class="sd">        The value ..math:`\mu_x - \muy` is interesting as it is driving the exponential term in the</span>
+<span class="sd">        calculation of the difference resonance ..math:`f_{1001}`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axis (matplotlib.axes.Axes): the `~matplotlib.axes.Axes` object on which to plot.</span>
+<span class="sd">        nominal (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the nominal</span>
+<span class="sd">            model.</span>
+<span class="sd">        before (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the bare waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        after (pd.DataFrame): the `~pd.DataFrame` with ``TWISS`` functions from the improved waist</span>
+<span class="sd">            shift implementation.</span>
+<span class="sd">        column (str): the column to plot. Should be one of ``MUX`` or ``MUY``. Defaults to ``MUX``</span>
+<span class="sd">            for the horizontal phase advances.</span>
+<span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">nominal</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">nominal</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nominal&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">before</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">before</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bare Waist Shift&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">after</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">after</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Improved Waist Shift&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
+        <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
+
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{x}</span><span class="s2"> - \mu_</span><span class="si">{y}</span><span class="s2"> \ [2 \pi]$&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<span class="c1"># ----- Helpers ----- #</span>
+
+
+<span class="k">def</span> <span class="nf">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Figures out the ``S`` coordinate of IP[1258] locations from the given *dataframe* and adds</span>
+<span class="sd">    vertical lines for each one on the provided *axis*.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dfcopy</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">ips_dataframe</span> <span class="o">=</span> <span class="n">dfcopy</span><span class="p">[</span><span class="n">dfcopy</span><span class="o">.</span><span class="n">NAME</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;^IP[1258]$&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row_tuple</span> <span class="ow">in</span> <span class="n">ips_dataframe</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+            <span class="n">row_tuple</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;Set1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">row_tuple</span><span class="o">.</span><span class="n">Index</span><span class="p">],</span>
+            <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">row_tuple</span><span class="o">.</span><span class="n">NAME</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Felix Soubelet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: 67.5%; }
+  </style>
+
+
+
+</body>
+</html>
