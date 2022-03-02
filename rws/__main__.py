@@ -229,10 +229,20 @@ def main(
 
     # ----- Generate Plots ----- #
     b1_figures = _generate_beam1_figures(
-        plots_dir=beam1_plots_dir, nominal_b1=nominal_twiss_b1, bare_b1=bare_twiss_b1, matched_b1=matched_twiss_b1
+        plots_dir=beam1_plots_dir,
+        nominal_b1=nominal_twiss_b1,
+        bare_b1=bare_twiss_b1,
+        matched_b1=matched_twiss_b1,
+        # kwargs
+        figsize=figsize,
     )
     b2_figures = _generate_beam2_figures(
-        plots_dir=beam2_plots_dir, nominal_b2=nominal_twiss_b2, bare_b2=bare_twiss_b2, matched_b2=matched_twiss_b2
+        plots_dir=beam2_plots_dir,
+        nominal_b2=nominal_twiss_b2,
+        bare_b2=bare_twiss_b2,
+        matched_b2=matched_twiss_b2,
+        # kwargs
+        figsize=figsize,
     )
 
     # ----- Eventually Display Plots ----- #
