@@ -29,8 +29,9 @@ from rws.plotting import (
 )
 from rws.utils import (
     add_betabeating_columns,
-    powering_delta,
     prepare_output_directories,
+    write_knob_delta,
+    write_knob_powering,
 )
 
 
@@ -91,6 +92,14 @@ from rws.utils import (
     help="Whether to ask matplotlib to show plots.",
 )
 @click.option(
+    "--figsize",
+    nargs=2,
+    type=click.Tuple([int, int]),
+    help="Figure size for the created plots."
+    "Will affect the visibility of the plots."
+    "Defaults to the standard matplotlib rcParams value.",
+)
+@click.option(
     "--loglevel",
     type=click.Choice(["trace", "debug", "info", "warning", "error", "critical"]),
     default="info",
@@ -106,6 +115,7 @@ def main(
     qx: float,
     qy: float,
     show_plots: bool,
+    figsize: Tuple[int, int],
     loglevel: str,
 ):
     config_logger(level=loglevel)
@@ -203,8 +213,19 @@ def main(
     # ----- Quick Sanity check ----- #
     assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"
 
-    # TODO: Prepare the output of the knob values to file as well as the variation from nominal powering
-    # TODO: should be in a 'knobs' subdirectory, as triplets.madx & triplets_change.madx etc
+    # ----- Write B1 Knobs ----- #
+    logger.info("Writing B1 knob powerings and deltas to disk")
+    write_knob_powering(beam1_knobs_dir / "triplets.madx", matched_triplets_b1)
+    write_knob_powering(beam1_knobs_dir / "quadrupoles.madx", matched_quads_b1)
+    write_knob_delta(beam1_knobs_dir / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
+    write_knob_delta(beam1_knobs_dir / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
+
+    # ----- Write B2 Knobs ----- #
+    logger.info("Writing B2 knob powerings and deltas to disk")
+    write_knob_powering(beam2_knobs_dir / "triplets.madx", matched_triplets_b2)
+    write_knob_powering(beam2_knobs_dir / "quadrupoles.madx", matched_quads_b2)
+    write_knob_delta(beam2_knobs_dir / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
+    write_knob_delta(beam2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2) 
 
     # ----- Generate Plots ----- #
     b1_figures = _generate_beam1_figures(
