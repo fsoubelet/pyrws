@@ -170,7 +170,7 @@ def write_knob_powering(file_path: Path, knob_dict: Dict[str, float]) -> None:
     logger.trace(f"Writing knob powering to '{file_path.absolute()}'.")
     with file_path.open("w") as knob_file:
         for knob, value in knob_dict.items():
-            knob_file.write(f"{knob:<11} = {value:>20};\n")
+            knob_file.write(f"{knob:<10} = {value:>22};\n")
 
 
 def write_knob_delta(file_path: Path, nominal_knobs: Dict[str, float], matched_knobs: Dict[str, float]) -> None:
@@ -182,4 +182,4 @@ def write_knob_delta(file_path: Path, nominal_knobs: Dict[str, float], matched_k
     with file_path.open("w") as delta_file:
         for knob, delta in deltas_dict.items():
             operation: str = "-" if delta < 0 else "+"
-            delta_file.write(f"{knob:<11} = {knob:>11}  {operation}  {abs(delta):>20};\n")
+            delta_file.write(f"{knob:<10} = {knob:>10}  {operation}  {abs(delta):>22};\n")
