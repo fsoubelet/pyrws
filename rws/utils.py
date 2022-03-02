@@ -98,7 +98,7 @@ def add_betabeating_columns(dataframe: pd.DataFrame, nominal: pd.DataFrame) -> p
     return df
 
 
-def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, float]):
+def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, float]) -> Dict[str, float]:
     """
     Compute the delta between the modified and nominal knobs, to determine the powering
     change that should be given in LSA.
@@ -161,3 +161,25 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
     beam2_plots_dir.mkdir(parents=True, exist_ok=True)
 
     return beam1_dir, beam1_knobs_dir, beam1_plots_dir, beam2_dir, beam2_knobs_dir, beam2_plots_dir
+
+
+def write_knob_powering(file_path: Path, knob_dict: Dict[str, float]) -> None:
+    """
+    Write the absolute powering values of the given knob `~dict` to the given file.
+    """
+    logger.trace(f"Writing knob powering to '{file_path.absolute()}'.")
+    with file_path.open("w") as knob_file:
+        for knob, value in knob_dict.items():
+            knob_file.write(f"{knob:<15} = {value:>15};\n")
+
+
+def write_knob_delta(file_path: Path, nominal_knobs: Dict[str, float], matched_knobs: Dict[str, float]) -> None:
+    """
+    Figure out the delta from the matched knobs to the nominal knobs, and write it down to the given file.
+    """
+    deltas_dict = powering_delta(nominal_knobs, matched_knobs)
+    logger.trace(f"Writing knob deltas to '{file_path.absolute()}'.")
+    with file_path.open("w") as delta_file:
+        for knob, delta in deltas_dict.items():
+            operation: str = "-" if delta < 0 else "+"
+            delta_file.write(f"{knob:<15} = {knob:>15} {operation} {abs(delta):>15};\n")
