@@ -29,12 +29,14 @@ with README.open("r") as docs:
 
 # Dependencies for the package itself
 DEPENDENCIES = [
-    "cpymad>=1.9.0",
-    "pyhdtoolkit>=0.16.0",
-    "tfs-pandas>=3.1.0",
-    "matplotlib>=3.0",
     "click>=8.0",
-    "optics-functions>=0.1.0",
+    "numpy>=1.21.0",
+    "pandas>=1.0",
+    "matplotlib>=3.0",
+    "tfs-pandas>=3.1.0",
+    "cpymad>=1.9.0",
+    "loguru>=0.5.0",
+    "pyhdtoolkit>=0.16.0",
 ]
 
 # Extra dependencies

@@ -14,7 +14,6 @@ import numpy as np
 import tfs
 from cpymad.madx import Madx
 from loguru import logger
-from optics_functions.coupling import coupling_via_cmatrix
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 
 from rws.constants import VARIED_IR_QUADRUPOLES
