@@ -256,3 +256,5 @@ Temporary Items
 .docs/gallery/
 .docs/gen_modules
 .docs/gen_modules/
+
+*.ipynb
