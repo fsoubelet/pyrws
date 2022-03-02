@@ -2,7 +2,7 @@
 Main callable script.
 """
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, Tuple
 
 import click
 import matplotlib
@@ -120,12 +120,12 @@ def main(
     ip: int,
     waist_shift_setting: float,
     outputdir: Path,
-    qx: float,
-    qy: float,
-    show_plots: bool,
-    mplstyle: str,
-    figsize: Tuple[int, int],
-    loglevel: str,
+    qx: Optional[float],
+    qy: Optional[float],
+    show_plots: Optional[bool],
+    mplstyle: Optional[str],
+    figsize: Optional[Tuple[int, int]],
+    loglevel: Optional[str],
 ):
     config_logger(level=loglevel)
     b1_dir, b1_knobs_dir, b1_plots_dir, b2_dir, b2_knobs_dir, b2_plots_dir = prepare_output_directories(outputdir)
