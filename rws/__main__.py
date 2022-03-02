@@ -68,6 +68,7 @@ from rws.utils import (
     "--outputdir",
     type=click.Path(exists=False, file_okay=False, resolve_path=True, path_type=Path),
     default=Path.cwd() / "outputs",
+    show_default=True,
     help="Directory in which to write output files. Defaults to 'outputs/' in the current working directory.",
 )
 # ----- Optional Arguments ----- #
@@ -93,6 +94,11 @@ from rws.utils import (
     help="Whether to ask matplotlib to show plots.",
 )
 @click.option(
+    "--mplstyle",
+    type=click.STRING,
+    help="Name of a matplotlib style to use for plots.",
+)
+@click.option(
     "--figsize",
     nargs=2,
     type=click.Tuple([int, int]),
@@ -116,11 +122,14 @@ def main(
     qx: float,
     qy: float,
     show_plots: bool,
+    mplstyle: str,
     figsize: Tuple[int, int],
     loglevel: str,
 ):
     config_logger(level=loglevel)
     b1_dir, b1_knobs_dir, b1_plots_dir, b2_dir, b2_knobs_dir, b2_plots_dir = prepare_output_directories(outputdir)
+    if mplstyle:
+        plt.style.use(mplstyle)
 
     # ----- Beam 1 Nominal ----- #
     logger.info("Preparing beam 1 nominal configuration")
