@@ -14,6 +14,8 @@ import pandas as pd
 from cpymad.madx import Madx
 from loguru import logger
 
+from rws.constants import EXPORT_TWISS_COLUMNS
+
 Array = Union[np.ndarray, pd.Series]
 
 # ----- Querying Utilities ----- #
@@ -114,6 +116,25 @@ def powering_delta(nominal_knobs: Dict[str, float], modified_knobs: Dict[str, fl
     logger.debug("Computing the delta between modified and nominal knobs.")
     assert nominal_knobs.keys() == modified_knobs.keys()
     return {key: modified_knobs[key] - nominal_knobs[key] for key in nominal_knobs.keys()}
+
+
+# ----- Subsampling Utilities ----- #
+
+
+def only_export_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns a sub-selection of the *dataframe* with only certain columns,
+    meant for writing to disk.
+
+    Args:
+        dataframe (pd.DataFrame): the `~pd.DataFrame` to do a selection of columns for.
+
+    Returns:
+        A copy of the original *dataframe* with only the desired columns in.
+    """
+    df = dataframe.reset_index().copy(deep=True)
+    df = df[EXPORT_TWISS_COLUMNS]
+    return df
 
 
 # ----- FileSystem Utilities ----- #
