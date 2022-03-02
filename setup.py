@@ -42,9 +42,10 @@ DEPENDENCIES = [
 # Extra dependencies
 EXTRA_DEPENDENCIES = {
     "test": ["pytest>=5.2", "pytest-cov>=2.9"],
-    "doc": [
+    "docs": [
         "sphinx",
         "sphinx_rtd_theme",
+        "sphinx-click>3.0",
         "sphinx-copybutton<1.0",
         "sphinxcontrib-bibtex>=2.4",
         "sphinx-panels<1.0",
