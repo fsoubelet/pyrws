@@ -95,8 +95,8 @@ from rws.utils import (
     "--figsize",
     nargs=2,
     type=click.Tuple([int, int]),
-    help="Figure size for the created plots."
-    "Will affect the visibility of the plots."
+    help="Figure size for the created plots. "
+    "Will affect the visibility of the plots. "
     "Defaults to the standard matplotlib rcParams value.",
 )
 @click.option(
@@ -225,7 +225,7 @@ def main(
     write_knob_powering(beam2_knobs_dir / "triplets.madx", matched_triplets_b2)
     write_knob_powering(beam2_knobs_dir / "quadrupoles.madx", matched_quads_b2)
     write_knob_delta(beam2_knobs_dir / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
-    write_knob_delta(beam2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2) 
+    write_knob_delta(beam2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2)
 
     # ----- Generate Plots ----- #
     b1_figures = _generate_beam1_figures(
