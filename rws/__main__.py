@@ -245,7 +245,7 @@ def main(
 
 
 def _generate_beam1_figures(
-    plots_dir: Path, nominal_b1: tfs.TfsDataFrame, bare_b1: tfs.TfsDataFrame, matched_b1: tfs.TfsDataFrame
+    plots_dir: Path, nominal_b1: tfs.TfsDataFrame, bare_b1: tfs.TfsDataFrame, matched_b1: tfs.TfsDataFrame, **kwargs
 ) -> Tuple[matplotlib.figure.Figure, ...]:
     """
     Helper to generate figures for beam 1 from the different result `~tfs.TfsDataFrame`
@@ -256,24 +256,25 @@ def _generate_beam1_figures(
         nominal_b1 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the nominal B1 results.
         bare_b1 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the bare waist B1 results.
         matched_b1 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the matched waist B1 results.
+        **kwargs: any keyword argument is passed to `~matplotlib.pyplot.subplots`.
 
     Returns:
         A tuple of all the generated figures.
     """
     logger.info("Generating plots for beam 1")
-    fig_b1_bbing_before, axis = plt.subplots()
+    fig_b1_bbing_before, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, bare_b1, show_ips=True)
     axis.set_ylim(-25, 55)
     axis.set_title("B1 - Waist Shift Induced Beta-Beating")
     fig_b1_bbing_before.savefig(plots_dir / "waist_shift_betabeatings.pdf")
 
-    fig_b1_bbing_after, axis = plt.subplots()
+    fig_b1_bbing_after, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, matched_b1, show_ips=True)
     axis.set_ylim(-12, 30)
     axis.set_title("B1 - Waist Shift Induced Beta-Beating, After Matching")
     fig_b1_bbing_after.savefig(plots_dir / "matched_waist_shift_betabeatings.pdf")
 
-    fig_b1_before_vs_after_bbing, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b1_before_vs_after_bbing, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_waist_shift_betabeatings_comparison(axx, bare_b1, matched_b1, column="BBX", show_ips=True)
     plot_waist_shift_betabeatings_comparison(axy, bare_b1, matched_b1, column="BBY", show_ips=True)
     axx.set_ylim(-30, 50)
@@ -282,28 +283,28 @@ def _generate_beam1_figures(
     axy.set_xlabel("S [m]")
     fig_b1_before_vs_after_bbing.savefig(plots_dir / "bare_vs_matched_betabeatings.pdf")
 
-    fig_b1_betas, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b1_betas, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_betas_comparison(axx, nominal_b1, bare_b1, matched_b1, column="BETX", show_ips=True)
     plot_betas_comparison(axy, nominal_b1, bare_b1, matched_b1, column="BETY", show_ips=True)
     axx.set_title("B1 - Beta Functions for Each Configuration")
     axy.set_xlabel("S [m]")
     fig_b1_betas.savefig(plots_dir / "betas.pdf")
 
-    fig_b1_betas_deviations, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b1_betas_deviations, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_betas_deviation(axx, nominal_b1, bare_b1, matched_b1, column="BETX", show_ips=True)
     plot_betas_deviation(axy, nominal_b1, bare_b1, matched_b1, column="BETY", show_ips=True)
     axx.set_title("B1 - Variation to Nominal Beta-Functions - Before vs After Matching")
     axy.set_xlabel("S [m]")
     fig_b1_betas_deviations.savefig(plots_dir / "betas_deviations.pdf")
 
-    fig_b1_phase_advances, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b1_phase_advances, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_phase_advances_comparison(axx, nominal_b1, bare_b1, matched_b1, column="MUX", show_ips=True)
     plot_phase_advances_comparison(axy, nominal_b1, bare_b1, matched_b1, column="MUY", show_ips=True)
     axx.set_title("B1 - Phase Advances for Each Configuration")
     axy.set_xlabel("S [m]")
     fig_b1_phase_advances.savefig(plots_dir / "phase_advances.pdf")
 
-    fig_b1_phase_differences, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b1_phase_differences, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_phase_differences(axx, nominal_b1, bare_b1, matched_b1, show_ips=True)
     plot_phase_differences(axy, nominal_b1, bare_b1, matched_b1, show_ips=True)
     axx.set_title("B1 - Phase Differences for Each Configuration")
@@ -322,7 +323,7 @@ def _generate_beam1_figures(
 
 
 def _generate_beam2_figures(
-    plots_dir: Path, nominal_b2: tfs.TfsDataFrame, bare_b2: tfs.TfsDataFrame, matched_b2: tfs.TfsDataFrame
+    plots_dir: Path, nominal_b2: tfs.TfsDataFrame, bare_b2: tfs.TfsDataFrame, matched_b2: tfs.TfsDataFrame, **kwargs
 ) -> Tuple[matplotlib.figure.Figure, ...]:
     """
     Helper to generate figures for beam 2 from the different result `~tfs.TfsDataFrame`
@@ -334,24 +335,25 @@ def _generate_beam2_figures(
         nominal_b2 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the nominal B2 results.
         bare_b2 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the bare waist B2 results.
         matched_b2 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the matched waist B2 results.
+        **kwargs: any keyword argument is passed to `~matplotlib.pyplot.subplots`.
 
     Returns:
         A tuple of all the generated figures.
     """
     logger.info("Generating plots for beam 2")
-    fig_b2_bbing_before, axis = plt.subplots()
+    fig_b2_bbing_before, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, bare_b2, show_ips=True)
     axis.set_ylim(-25, 55)
     axis.set_title("B2 - Waist Shift Induced Beta-Beating")
     fig_b2_bbing_before.savefig(plots_dir / "waist_shift_betabeatings.pdf")
 
-    fig_b2_bbing_after, axis = plt.subplots()
+    fig_b2_bbing_after, axis = plt.subplots(**kwargs)
     plot_waist_shift_betabeatings(axis, matched_b2, show_ips=True)
     axis.set_ylim(-12, 30)
     axis.set_title("B2 - Waist Shift Induced Beta-Beating, After Matching")
     fig_b2_bbing_after.savefig(plots_dir / "matched_waist_shift_betabeatings.pdf")
 
-    fig_b2_before_vs_after_bbing, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b2_before_vs_after_bbing, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_waist_shift_betabeatings_comparison(axx, bare_b2, matched_b2, column="BBX", show_ips=True)
     plot_waist_shift_betabeatings_comparison(axy, bare_b2, matched_b2, column="BBY", show_ips=True)
     axx.set_ylim(-30, 50)
@@ -360,28 +362,28 @@ def _generate_beam2_figures(
     axy.set_xlabel("S [m]")
     fig_b2_before_vs_after_bbing.savefig(plots_dir / "bare_vs_matched_betabeatings.pdf")
 
-    fig_b2_betas, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b2_betas, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_betas_comparison(axx, nominal_b2, bare_b2, matched_b2, column="BETX", show_ips=True)
     plot_betas_comparison(axy, nominal_b2, bare_b2, matched_b2, column="BETY", show_ips=True)
     axx.set_title("B2 - Beta Functions for Each Configuration")
     axy.set_xlabel("S [m]")
     fig_b2_betas.savefig(plots_dir / "betas.pdf")
 
-    fig_b2_betas_deviations, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b2_betas_deviations, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_betas_deviation(axx, nominal_b2, bare_b2, matched_b2, column="BETX", show_ips=True)
     plot_betas_deviation(axy, nominal_b2, bare_b2, matched_b2, column="BETY", show_ips=True)
     axx.set_title("B2 - Variation to Nominal Beta-Functions - Before vs After Matching")
     axy.set_xlabel("S [m]")
     fig_b2_betas_deviations.savefig(plots_dir / "betas_deviations.pdf")
 
-    fig_b2_phase_advances, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b2_phase_advances, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_phase_advances_comparison(axx, nominal_b2, bare_b2, matched_b2, column="MUX", show_ips=True)
     plot_phase_advances_comparison(axy, nominal_b2, bare_b2, matched_b2, column="MUY", show_ips=True)
     axx.set_title("B2 - Phase Advances for Each Configuration")
     axy.set_xlabel("S [m]")
     fig_b2_phase_advances.savefig(plots_dir / "phase_advances.pdf")
 
-    fig_b2_phase_differences, (axx, axy) = plt.subplots(2, 1, sharex=True)
+    fig_b2_phase_differences, (axx, axy) = plt.subplots(2, 1, sharex=True, **kwargs)
     plot_phase_differences(axx, nominal_b2, bare_b2, matched_b2, show_ips=True)
     plot_phase_differences(axy, nominal_b2, bare_b2, matched_b2, show_ips=True)
     axx.set_title("B2 - Phase Differences for Each Configuration")
