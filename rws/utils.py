@@ -133,7 +133,8 @@ def only_export_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
         A copy of the original *dataframe* with only the desired columns in.
     """
     df = dataframe.reset_index().copy(deep=True)
-    df = df[EXPORT_TWISS_COLUMNS]
+    intersect_columns = [val for val in df.columns if val in EXPORT_TWISS_COLUMNS]
+    df = df[intersect_columns]
     return df
 
 
