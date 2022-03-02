@@ -30,6 +30,7 @@ from rws.plotting import (
 from rws.utils import (
     add_betabeating_columns,
     only_export_columns,
+    only_monitors,
     prepare_output_directories,
     write_knob_delta,
     write_knob_powering,
@@ -169,8 +170,11 @@ def main(
     # ----- Beam 1 Output Files ----- #
     logger.info("Writing out TFS files for beam 1")
     tfs.write(b1_dir / "nominal_b1.tfs", only_export_columns(nominal_twiss_b1))
+    tfs.write(b1_dir / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(nominal_twiss_b1)))
     tfs.write(b1_dir / "bare_waist_b1.tfs", only_export_columns(bare_twiss_b1))
+    tfs.write(b1_dir / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b1)))
     tfs.write(b1_dir / "matched_waist_b1.tfs", only_export_columns(matched_twiss_b1))
+    tfs.write(b1_dir / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b1)))
 
     # ----- Beam 2 Nominal ----- #
     logger.info("Preparing beam 2 nominal configuration")
@@ -210,8 +214,11 @@ def main(
     # ----- Beam 2 Output Files ----- #
     logger.info("Writing out TFS files for beam 2")
     tfs.write(b2_dir / "nominal_b2.tfs", only_export_columns(nominal_twiss_b2))
+    tfs.write(b2_dir / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(nominal_twiss_b2)))
     tfs.write(b2_dir / "bare_waist_b2.tfs", only_export_columns(bare_twiss_b2))
+    tfs.write(b2_dir / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b2)))
     tfs.write(b2_dir / "matched_waist_b2.tfs", only_export_columns(matched_twiss_b2))
+    tfs.write(b2_dir / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b2)))
 
     # ----- Quick Sanity check ----- #
     assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"

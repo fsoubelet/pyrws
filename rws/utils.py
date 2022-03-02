@@ -137,6 +137,22 @@ def only_export_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def only_monitors(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns a sub-selection of the *dataframe* with only rows corresponding to monitor
+    elements (aka BPMs), meant for writing to disk.
+
+    Args:
+        dataframe (pd.DataFrame): the `~pd.DataFrame` to do a selection of columns for.
+
+    Returns:
+        A copy of the original *dataframe* with only the desired rows in.
+    """
+    df = dataframe.copy(deep=True)
+    df = df[df.KEYWORD == "monitor"]
+    return df
+
+
 # ----- FileSystem Utilities ----- #
 
 
