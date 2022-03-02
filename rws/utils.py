@@ -156,7 +156,7 @@ def only_monitors(dataframe: pd.DataFrame) -> pd.DataFrame:
 # ----- FileSystem Utilities ----- #
 
 
-def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path, Path, Path]:
+def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path, Path, Path, Path, Path]:
     """
     Creates the proper directories where the output files will be written.
 
@@ -166,7 +166,8 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
 
     Returns:
         The `~pathlib.Path` objects to the created output directories. In order, these
-        are for beam1, beam1 knobs, beam1 plots, beam2, beam2 knobs and beam2 plots.
+        are for beam1, beam1 tfs files, beam1 knobs, beam1 plots, beam2, beam2 tfs files,
+        beam2 knobs and beam2 plots.
     """
     logger.debug(f"Creating output directory at '{outputdir.absolute()}'.")
     outputdir.mkdir(parents=True, exist_ok=True)
@@ -175,6 +176,10 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
     beam1_dir = outputdir / "BEAM1"
     logger.trace(f"Creating BEAM directory at '{beam1_dir.absolute()}'.")
     beam1_dir.mkdir(parents=True, exist_ok=True)
+
+    beam1_tfs_dir = beam1_dir / "TFS"
+    logger.trace(f"Creating TFS directory at '{beam1_tfs_dir.absolute()}'.")
+    beam1_tfs_dir.mkdir(parents=True, exist_ok=True)
 
     beam1_knobs_dir = beam1_dir / "KNOBS"
     logger.trace(f"Creating B1 knobs sub-directory at '{beam1_knobs_dir.absolute()}'.")
@@ -189,6 +194,10 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
     logger.trace(f"Creating BEAM directory at '{beam2_dir.absolute()}'.")
     beam2_dir.mkdir(parents=True, exist_ok=True)
 
+    beam2_tfs_dir = beam2_dir / "TFS"
+    logger.trace(f"Creating TFS directory at '{beam2_tfs_dir.absolute()}'.")
+    beam2_tfs_dir.mkdir(parents=True, exist_ok=True)
+
     beam2_knobs_dir = beam2_dir / "KNOBS"
     logger.trace(f"Creating B2 knobs sub-directory at '{beam2_knobs_dir.absolute()}'.")
     beam2_knobs_dir.mkdir(parents=True, exist_ok=True)
@@ -197,7 +206,16 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
     logger.trace(f"Creating B2 plots sub-directory at '{beam2_plots_dir.absolute()}'.")
     beam2_plots_dir.mkdir(parents=True, exist_ok=True)
 
-    return beam1_dir, beam1_knobs_dir, beam1_plots_dir, beam2_dir, beam2_knobs_dir, beam2_plots_dir
+    return (
+        beam1_dir,
+        beam1_tfs_dir,
+        beam1_knobs_dir,
+        beam1_plots_dir,
+        beam2_dir,
+        beam2_tfs_dir,
+        beam2_knobs_dir,
+        beam2_plots_dir,
+    )
 
 
 def write_knob_powering(file_path: Path, knob_dict: Dict[str, float]) -> None:
