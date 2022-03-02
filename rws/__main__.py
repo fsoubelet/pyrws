@@ -1,5 +1,5 @@
-from rws.cli import main
+from rws.cli import create_knobs
 
 
 if __name__ == "__main__":
-    main()
+    create_knobs()

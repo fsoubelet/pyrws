@@ -116,7 +116,7 @@ from rws.utils import (
     show_default=True,
     help="Sets the logging level.",
 )
-def main(
+def create_knobs(
     sequence: Path,
     opticsfile: Path,
     ip: int,
