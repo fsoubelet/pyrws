@@ -39,7 +39,7 @@ from rws.utils import (
 )
 
 
-@click.command()
+@click.command(context_settings=dict(max_content_width=105))
 # ----- Required Arguments ----- #
 @click.option(
     "--sequence",
