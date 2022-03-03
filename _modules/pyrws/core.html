@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rws.core &mdash; rws 0.1.0 documentation</title>
+  <title>pyrws.core &mdash; pyrws 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -31,7 +31,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> rws
+            <a href="../../index.html" class="icon icon-home"> pyrws
           </a>
               <div class="version">
                 0.1.0
@@ -51,11 +51,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#program-worfklow">Program Worfklow</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">RWS Command Line</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#rws">rws</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">PYRWS Command Line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#pyrws">pyrws</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#module-rws.constants">RWS Modules</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#module-pyrws.constants">PYRWS Modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#useful-constants">Useful Constants</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#core-functionality">Core Functionality</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules/index.html#plotting-functions">Plotting Functions</a></li>
@@ -70,7 +70,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">rws</a>
+          <a href="../../index.html">pyrws</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -79,7 +79,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>rws.core</li>
+      <li>pyrws.core</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -88,7 +88,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for rws.core</h1><div class="highlight"><pre>
+  <h1>Source code for pyrws.core</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">.. _core:</span>
 
@@ -108,8 +108,8 @@
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
 <span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools</span> <span class="kn">import</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">matching</span><span class="p">,</span> <span class="n">orbit</span><span class="p">,</span> <span class="n">twiss</span>
-<span class="kn">from</span> <span class="nn">rws.constants</span> <span class="kn">import</span> <span class="n">VARIED_IR_QUADRUPOLES</span>
-<span class="kn">from</span> <span class="nn">rws.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">pyrws.constants</span> <span class="kn">import</span> <span class="n">VARIED_IR_QUADRUPOLES</span>
+<span class="kn">from</span> <span class="nn">pyrws.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">,</span>
     <span class="n">get_triplets_powering_knobs</span><span class="p">,</span>
     <span class="n">get_tunes_and_chroma_knobs</span><span class="p">,</span>
@@ -118,7 +118,7 @@
 <span class="c1"># ----- Nominal Setup ----- #</span>
 
 
-<div class="viewcode-block" id="get_nominal_beam_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_nominal_beam_config">[docs]</a><span class="k">def</span> <span class="nf">get_nominal_beam_config</span><span class="p">(</span>
+<div class="viewcode-block" id="get_nominal_beam_config"><a class="viewcode-back" href="../../modules/index.html#pyrws.core.get_nominal_beam_config">[docs]</a><span class="k">def</span> <span class="nf">get_nominal_beam_config</span><span class="p">(</span>
     <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -170,7 +170,7 @@
 <span class="c1"># ----- Implement Bare Waist Shift ----- #</span>
 
 
-<div class="viewcode-block" id="get_bare_waist_shift_beam1_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_bare_waist_shift_beam1_config">[docs]</a><span class="k">def</span> <span class="nf">get_bare_waist_shift_beam1_config</span><span class="p">(</span>
+<div class="viewcode-block" id="get_bare_waist_shift_beam1_config"><a class="viewcode-back" href="../../modules/index.html#pyrws.core.get_bare_waist_shift_beam1_config">[docs]</a><span class="k">def</span> <span class="nf">get_bare_waist_shift_beam1_config</span><span class="p">(</span>
     <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rigidty_waist_shift_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -213,7 +213,7 @@
     <span class="k">return</span> <span class="n">twiss_df</span><span class="p">,</span> <span class="n">triplets_knobs</span><span class="p">,</span> <span class="n">quads_knobs</span><span class="p">,</span> <span class="n">working_point_knobs</span></div>
 
 
-<div class="viewcode-block" id="get_bare_waist_shift_beam2_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_bare_waist_shift_beam2_config">[docs]</a><span class="k">def</span> <span class="nf">get_bare_waist_shift_beam2_config</span><span class="p">(</span>
+<div class="viewcode-block" id="get_bare_waist_shift_beam2_config"><a class="viewcode-back" href="../../modules/index.html#pyrws.core.get_bare_waist_shift_beam2_config">[docs]</a><span class="k">def</span> <span class="nf">get_bare_waist_shift_beam2_config</span><span class="p">(</span>
     <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">triplet_knobs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">qx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qy</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -262,7 +262,7 @@
 <span class="c1"># ----- Match for the Improved Waist Shift ----- #</span>
 
 
-<div class="viewcode-block" id="get_matched_waist_shift_config"><a class="viewcode-back" href="../../modules/index.html#rws.core.get_matched_waist_shift_config">[docs]</a><span class="k">def</span> <span class="nf">get_matched_waist_shift_config</span><span class="p">(</span>
+<div class="viewcode-block" id="get_matched_waist_shift_config"><a class="viewcode-back" href="../../modules/index.html#pyrws.core.get_matched_waist_shift_config">[docs]</a><span class="k">def</span> <span class="nf">get_matched_waist_shift_config</span><span class="p">(</span>
     <span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span>
     <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">ip</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
