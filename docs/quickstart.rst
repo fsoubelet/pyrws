@@ -13,7 +13,7 @@ You can install it simply from ``PyPI`` in a virtual environment with:
 
 .. prompt:: bash
 
-    pip install rws
+    pip install pyrws
 
 .. tip::
     Don't know what a virtual environment is or how to set it up?
@@ -29,9 +29,9 @@ One can use the tool by simply calling it with the ``-m`` flag at the commandlin
 
 .. prompt:: bash $
 
-    python -m rws --help
+    python -m pyrws --help
 
-To see these options, refer to the :ref:`following page <rws-cli>`.
+To see these options, refer to the :ref:`following page <pyrws-cli>`.
 
 .. admonition:: Example
     
@@ -45,7 +45,7 @@ To see these options, refer to the :ref:`following page <rws-cli>`.
 
     .. prompt:: bash $
 
-        python -m rws \
+        python -m pyrws \
           --sequence /path/to/lhc_as-built.seq \
           --opticsfile /path/to/proton/opticsfiles/opticsfile.22 \
           --ip 1 \

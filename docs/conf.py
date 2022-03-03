@@ -31,17 +31,17 @@ TOPLEVEL_DIR = pathlib.Path(__file__).parent.parent.absolute()
 if str(TOPLEVEL_DIR) not in sys.path:
     sys.path.insert(0, str(TOPLEVEL_DIR))
 
-import rws
+import pyrws
 
 # -- Project information -----------------------------------------------------
 
-project = "rws"
-copyright = f"2022, {rws.__author__}"
-author = rws.__author__
+project = "pyrws"
+copyright = f"2022, {pyrws.__author__}"
+author = pyrws.__author__
 
 # The full version, including alpha/beta/rc tags
-version = rws.__version__
-release = rws.__version__
+version = pyrws.__version__
+release = pyrws.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -50,7 +50,7 @@ release = rws.__version__
 # needs_sphinx = '1.0'
 
 # Config for the sphinx_issues extension
-issues_github_path = "fsoubelet/rws"
+issues_github_path = "fsoubelet/pyrws"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -440,10 +440,10 @@ man_pages = [(master_doc, "pyhdtoolkit", "PyhDToolkit Documentation", [author], 
 texinfo_documents = [
     (
         master_doc,
-        "rws",
-        "RWS Documentation",
+        "pyrws",
+        "PYRWS Documentation",
         author,
-        "rws",
+        "pyrws",
         "One line description of project.",
         "Miscellaneous",
     )

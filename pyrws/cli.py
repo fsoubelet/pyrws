@@ -16,13 +16,13 @@ from matplotlib import pyplot as plt
 
 from pyhdtoolkit.utils._misc import fullpath
 from pyhdtoolkit.utils.defaults import config_logger
-from rws.core import (
+from pyrws.core import (
     get_bare_waist_shift_beam1_config,
     get_bare_waist_shift_beam2_config,
     get_matched_waist_shift_config,
     get_nominal_beam_config,
 )
-from rws.plotting import (
+from pyrws.plotting import (
     plot_betas_comparison,
     plot_betas_deviation,
     plot_phase_advances_comparison,
@@ -30,7 +30,7 @@ from rws.plotting import (
     plot_waist_shift_betabeatings,
     plot_waist_shift_betabeatings_comparison,
 )
-from rws.utils import (
+from pyrws.utils import (
     add_betabeating_columns,
     only_export_columns,
     only_monitors,

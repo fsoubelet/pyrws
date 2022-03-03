@@ -1,25 +1,25 @@
-.. _rws-cli:
+.. _pyrws-cli:
 
-RWS Command Line
-================
+PYRWS Command Line
+==================
 
-.. click:: rws.cli:create_knobs
-   :prog: rws
+.. click:: pyrws.cli:create_knobs
+   :prog: pyrws
    :nested: full
 
-.. _rws-modules:
+.. _pyrws-modules:
 
-RWS Modules
-===========
+PYRWS Modules
+=============
 
-.. automodule:: rws.constants
+.. automodule:: pyrws.constants
     :members:
 
-.. automodule:: rws.core
+.. automodule:: pyrws.core
     :members:
 
-.. automodule:: rws.plotting
+.. automodule:: pyrws.plotting
     :members:
 
-.. automodule:: rws.utils
+.. automodule:: pyrws.utils
     :members:

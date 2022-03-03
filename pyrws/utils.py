@@ -18,7 +18,7 @@ from cpymad.madx import Madx
 from loguru import logger
 
 from pyhdtoolkit.cpymadtools.lhc import get_lhc_tune_and_chroma_knobs
-from rws.constants import EXPORT_TWISS_COLUMNS
+from pyrws.constants import EXPORT_TWISS_COLUMNS
 
 Array = Union[np.ndarray, pd.Series]
 

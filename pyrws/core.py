@@ -17,8 +17,8 @@ from cpymad.madx import Madx
 from loguru import logger
 
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
-from rws.constants import VARIED_IR_QUADRUPOLES
-from rws.utils import (
+from pyrws.constants import VARIED_IR_QUADRUPOLES
+from pyrws.utils import (
     get_independent_quadrupoles_powering_knobs,
     get_triplets_powering_knobs,
     get_tunes_and_chroma_knobs,
