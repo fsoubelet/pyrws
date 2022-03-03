@@ -110,7 +110,7 @@ def get_bare_waist_shift_beam1_config(
         IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
         (tunes and chroma).
     """
-    _, _, _ = get_nominal_beam_config(madx, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
+    _ = get_nominal_beam_config(madx, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 1 at IP{ip}")
     lhc.apply_lhc_rigidity_waist_shift_knob(madx, rigidty_waist_shift_value=rigidty_waist_shift_value, ir=ip)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb1", qx, qy, 2.0, 2.0, calls=200)
@@ -154,7 +154,7 @@ def get_bare_waist_shift_beam2_config(
         IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
         (tunes and chroma).
     """
-    _, _, _ = get_nominal_beam_config(madx, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
+    _ = get_nominal_beam_config(madx, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
     logger.debug(f"Triplet knobs are: {triplet_knobs}")
     with madx.batch():
