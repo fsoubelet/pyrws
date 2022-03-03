@@ -179,7 +179,7 @@ def get_matched_waist_shift_config(
     bare_twiss: tfs.TfsDataFrame,
     qx: float,
     qy: float,
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float]]:
+) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Performs relevant matchings to improve the rigid waist shift at the provided *ip* for beam 1,
     and returns the corresponding configuration for beam the provided *beam* (twiss table, triplet
@@ -209,8 +209,9 @@ def get_matched_waist_shift_config(
 
     Returns:
         In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs and a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs.
+        and values of the triplets powering knobs, a `dict` with the names and values of the independent
+        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
+        (tunes and chroma).
     """
     assert beam in (1, 2)
     assert ip in (1, 5)
@@ -273,4 +274,5 @@ def get_matched_waist_shift_config(
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
-    return twiss_df, triplets_knobs, quads_knobs
+    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=beam)
+    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
