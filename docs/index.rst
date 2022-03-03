@@ -1,4 +1,4 @@
-Welcome to PYRWS's Documentation!
+Welcome to PyRWS's Documentation!
 =================================
 
 This package is an command line tool program to create rigid waist shift configurations for the LHC Run 3 commissioning.

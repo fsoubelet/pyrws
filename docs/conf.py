@@ -441,7 +441,7 @@ texinfo_documents = [
     (
         master_doc,
         "pyrws",
-        "PYRWS Documentation",
+        "PyRWS Documentation",
         author,
         "pyrws",
         "One line description of project.",
