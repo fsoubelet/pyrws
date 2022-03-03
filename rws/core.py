@@ -18,14 +18,18 @@ from loguru import logger
 
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 from rws.constants import VARIED_IR_QUADRUPOLES
-from rws.utils import get_independent_quadrupoles_powering_knobs, get_triplets_powering_knobs
+from rws.utils import (
+    get_independent_quadrupoles_powering_knobs,
+    get_triplets_powering_knobs,
+    get_tunes_and_chroma_knobs,
+)
 
 # ----- Nominal Setup ----- #
 
 
 def get_nominal_beam_config(
     madx: Madx, beam: int, ip: int, qx: float, qy: float
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float]]:
+) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Provided with an active `~cpymad.madx.Madx` object, will match to the working point defined
     by the provided tunes *qx* and *qy* and return the nominal configuration for the provided *beam*
@@ -52,8 +56,9 @@ def get_nominal_beam_config(
 
     Returns:
         In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs and a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs.
+        and values of the triplets powering knobs, a `dict` with the names and values of the independent
+        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
+        (tunes and chroma).
     """
     assert beam in (1, 2)
     assert ip in (1, 5)
@@ -67,7 +72,8 @@ def get_nominal_beam_config(
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
-    return twiss_df, triplets_knobs, quads_knobs
+    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=beam)
+    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
 
 
 # ----- Implement Bare Waist Shift ----- #
@@ -75,7 +81,7 @@ def get_nominal_beam_config(
 
 def get_bare_waist_shift_beam1_config(
     madx: Madx, ip: int, rigidty_waist_shift_value: float, qx: float, qy: float
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float]]:
+) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding
     configuration for beam 1 (twiss table, triplet knobs, independent IR quadrupoles knobs).
@@ -100,8 +106,9 @@ def get_bare_waist_shift_beam1_config(
 
     Returns:
         In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs and a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs.
+        and values of the triplets powering knobs, a `dict` with the names and values of the independent
+        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
+        (tunes and chroma).
     """
     _, _, _ = get_nominal_beam_config(madx, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 1 at IP{ip}")
@@ -111,12 +118,13 @@ def get_bare_waist_shift_beam1_config(
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1)
-    return twiss_df, triplets_knobs, quads_knobs
+    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=2)
+    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
 
 
 def get_bare_waist_shift_beam2_config(
     madx: Madx, ip: int, triplet_knobs: Dict[str, float], qx: float, qy: float
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float]]:
+) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding
     configuration for beam 1 (twiss table, triplet knobs, independent IR quadrupoles knobs).
@@ -142,8 +150,9 @@ def get_bare_waist_shift_beam2_config(
 
     Returns:
         In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs and a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs.
+        and values of the triplets powering knobs, a `dict` with the names and values of the independent
+        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
+        (tunes and chroma).
     """
     _, _, _ = get_nominal_beam_config(madx, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
@@ -154,8 +163,9 @@ def get_bare_waist_shift_beam2_config(
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
-    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1)
-    return twiss_df, triplets_knobs, quads_knobs
+    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=2)
+    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=2)
+    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
 
 
 # ----- Match for the Improved Waist Shift ----- #
