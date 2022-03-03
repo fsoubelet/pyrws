@@ -6,6 +6,8 @@ Utilities
 
 Provides miscellaneous utility functions.
 """
+import shlex
+
 from pathlib import Path
 from typing import Dict, Sequence, Tuple, Union
 
@@ -15,6 +17,7 @@ import pandas as pd
 from cpymad.madx import Madx
 from loguru import logger
 
+from pyhdtoolkit.cpymadtools.lhc import get_lhc_tune_and_chroma_knobs
 from rws.constants import EXPORT_TWISS_COLUMNS
 
 Array = Union[np.ndarray, pd.Series]
@@ -31,7 +34,7 @@ def get_triplets_powering_knobs(madx: Madx, ip: int) -> Dict[str, float]:
         ip (int): the IP for which to get the triplets powering knob values for.
 
     Returns:
-        A dictionary of the knob names and their values.
+        A `dict` of the knob names and their values.
     """
     logger.debug(f"Querying triplets powering knob values around IP{ip:d}.")
     right_knob, left_knob = f"kqx.r{ip:d}", f"kqx.l{ip:d}"  # IP triplet default knobs (no trims)
@@ -51,7 +54,7 @@ def get_independent_quadrupoles_powering_knobs(
         ip (int): the IP around which to get the quadrupoles powering knobs for.
 
     Returns:
-        A dictionary of the knob names and their values.
+        A `dict` of the knob names and their values.
     """
     logger.debug(f"Querying powering knob values for quadrupoles {quad_numbers} around IP{ip:d}.")
     powering_knobs = {}
@@ -62,6 +65,24 @@ def get_independent_quadrupoles_powering_knobs(
             knob = f"kq{'t' if quad >= 11 else ''}{'l' if quad == 11 else ''}{quad}.{side}{ip}b{beam}"
             powering_knobs[knob] = madx.globals[knob]
     return powering_knobs
+
+
+def get_tunes_and_chroma_knobs(madx: Madx, beam: int, telescopic_squeeze: bool = True) -> Dict[str, float]:
+    """
+    Returns the tunes and chroma knobs.
+
+    Args:
+        madx (cpymad.madx.Madx): an instantiated `~cpymad.madx.Madx` object.
+        beam (int): the beam number to get knob values for.
+        telescopic_squeeze (bool): if set to `True`, returns the knobs for Telescopic
+            Squeeze configuration. Defaults to `True` to reflect run III scenarios.
+
+    Returns:
+        A `dict` of the knob names and their values.
+    """
+    logger.debug("Querying tune and chroma knobs")
+    knobs = get_lhc_tune_and_chroma_knobs("lhc", beam, telescopic_squeeze)
+    return {knob_name: madx.globals[knob_name] for knob_name in knobs}
 
 
 # ----- Computing Utilities ----- #
@@ -240,3 +261,22 @@ def write_knob_delta(file_path: Path, nominal_knobs: Dict[str, float], matched_k
         for knob, delta in deltas_dict.items():
             operation: str = "-" if delta < 0 else "+"
             delta_file.write(f"{knob:<10} = {knob:>10}  {operation}  {abs(delta):>22};\n")
+
+
+def load_knobs_file(filepath: Path) -> Dict[str, float]:
+    """
+    Loads the knob values from the file they are written in by `~.write_knob_powering`.
+
+    Args:
+        filepath (Path): `~pathlib.Path` object to the file with the saved knob values.
+
+    Returns:
+        A `~dict` of knob names and their values, in absolute powering.
+    """
+    logger.debug(f"Loading knob values from '{filepath.absolute()}'.")
+    knob_dict = {}
+    for line in filepath.read_text().splitlines():
+        knob_name = shlex.split(line)[0]
+        knob_value = float(shlex.split(line)[-1][:-1])  # last element is value, and we ignore the ;
+        knob_dict[knob_name] = knob_value
+    return knob_dict
