@@ -130,6 +130,7 @@ def create_knobs(
     figsize: Optional[Tuple[int, int]],
     loglevel: Optional[str],
 ):
+    # ----- Configuration ----- #
     config_logger(level=loglevel)
     (
         b1_dir,
@@ -154,7 +155,7 @@ def create_knobs(
             madxb1.call(fullpath(sequence))
             madxb1.call(fullpath(opticsfile))
 
-            nominal_twiss_b1, nominal_triplets_b1, nominal_quads_b1 = get_nominal_beam_config(
+            nominal_twiss_b1, nominal_triplets_b1, nominal_quads_b1, nominal_wp_b1 = get_nominal_beam_config(
                 madxb1, beam=1, ip=ip, qx=qx, qy=qy
             )
 
@@ -168,13 +169,13 @@ def create_knobs(
             madxb1.call(fullpath(sequence))
             madxb1.call(fullpath(opticsfile))
 
-            bare_twiss_b1, bare_triplets_b1, bare_quads_b1 = get_bare_waist_shift_beam1_config(
+            bare_twiss_b1, bare_triplets_b1, bare_quads_b1, bare_wp_b1 = get_bare_waist_shift_beam1_config(
                 madxb1, ip=ip, rigidty_waist_shift_value=waist_shift_setting, qx=qx, qy=qy
             )
             bare_twiss_b1 = add_betabeating_columns(bare_twiss_b1, nominal_twiss_b1)
 
             logger.info("Refining beam 1 waist shift - this may take a while...")
-            matched_twiss_b1, matched_triplets_b1, matched_quads_b1 = get_matched_waist_shift_config(
+            matched_twiss_b1, matched_triplets_b1, matched_quads_b1, matched_wp_b1 = get_matched_waist_shift_config(
                 madxb1, beam=1, ip=ip, nominal_twiss=nominal_twiss_b1, bare_twiss=bare_twiss_b1, qx=qx, qy=qy
             )
             matched_twiss_b1 = add_betabeating_columns(matched_twiss_b1, nominal_twiss_b1)
@@ -187,6 +188,15 @@ def create_knobs(
     tfs.write(b1_tfs_dir / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b1)))
     tfs.write(b1_tfs_dir / "matched_waist_b1.tfs", only_export_columns(matched_twiss_b1))
     tfs.write(b1_tfs_dir / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b1)))
+
+    # ----- Write B1 Knobs ----- #
+    logger.info("Writing B1 knob powerings and deltas to disk")
+    write_knob_powering(b1_knobs_dir / "triplets.madx", matched_triplets_b1)
+    write_knob_powering(b1_knobs_dir / "quadrupoles.madx", matched_quads_b1)
+    write_knob_powering(b1_knobs_dir / "working_point.madx", matched_wp_b1)
+    write_knob_delta(b1_knobs_dir / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
+    write_knob_delta(b1_knobs_dir / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
+    write_knob_delta(b1_knobs_dir / "working_point_change.madx", nominal_wp_b1, matched_wp_b1)
 
     # ----- Beam 2 Nominal ----- #
     logger.info("Preparing beam 2 nominal configuration")
@@ -234,13 +244,6 @@ def create_knobs(
 
     # ----- Quick Sanity check ----- #
     assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"
-
-    # ----- Write B1 Knobs ----- #
-    logger.info("Writing B1 knob powerings and deltas to disk")
-    write_knob_powering(b1_knobs_dir / "triplets.madx", matched_triplets_b1)
-    write_knob_powering(b1_knobs_dir / "quadrupoles.madx", matched_quads_b1)
-    write_knob_delta(b1_knobs_dir / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
-    write_knob_delta(b1_knobs_dir / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
 
     # ----- Write B2 Knobs ----- #
     logger.info("Writing B2 knob powerings and deltas to disk")
