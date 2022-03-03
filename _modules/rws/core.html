@@ -103,15 +103,13 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tfs</span>
+
 <span class="kn">from</span> <span class="nn">cpymad.madx</span> <span class="kn">import</span> <span class="n">Madx</span>
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools</span> <span class="kn">import</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">matching</span><span class="p">,</span> <span class="n">orbit</span><span class="p">,</span> <span class="n">twiss</span>
 
+<span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools</span> <span class="kn">import</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">matching</span><span class="p">,</span> <span class="n">orbit</span><span class="p">,</span> <span class="n">twiss</span>
 <span class="kn">from</span> <span class="nn">rws.constants</span> <span class="kn">import</span> <span class="n">VARIED_IR_QUADRUPOLES</span>
-<span class="kn">from</span> <span class="nn">rws.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">,</span>
-    <span class="n">get_triplets_powering_knobs</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rws.utils</span> <span class="kn">import</span> <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">,</span> <span class="n">get_triplets_powering_knobs</span>
 
 <span class="c1"># ----- Nominal Setup ----- #</span>
 

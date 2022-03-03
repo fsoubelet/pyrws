@@ -99,15 +99,14 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="c1"># ----- Beta-Beating Plotters ----- #</span>
 
 
-<div class="viewcode-block" id="plot_waist_shift_betabeatings"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_waist_shift_betabeatings">[docs]</a><span class="k">def</span> <span class="nf">plot_waist_shift_betabeatings</span><span class="p">(</span>
-    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="plot_waist_shift_betabeatings"><a class="viewcode-back" href="../../modules/index.html#rws.plotting.plot_waist_shift_betabeatings">[docs]</a><span class="k">def</span> <span class="nf">plot_waist_shift_betabeatings</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">show_ips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Plots the horizontal and vertical beta-beatings on the given *axis*.</span>
 
 <span class="sd">    .. note::</span>
@@ -175,9 +174,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;BBX&quot;</span><span class="p">,</span> <span class="s2">&quot;BBY&quot;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting waist shift induced beta-beating before and after matching.&quot;</span><span class="p">)</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bare Waist Shift&quot;</span>
-    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bare Waist Shift&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
         <span class="mi">100</span> <span class="o">*</span> <span class="n">after</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
@@ -191,9 +188,7 @@
         <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">before</span><span class="p">)</span>
 
     <span class="n">ylabel</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_x}{\beta_x} \ [\%]$&quot;</span>
-        <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BBX&quot;</span>
-        <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_y}{\beta_y} \ [\%]$&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_x}{\beta_x} \ [\%]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BBX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_y}{\beta_y} \ [\%]$&quot;</span>
     <span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
@@ -228,9 +223,7 @@
 <span class="sd">            Defaults to `False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;BETX&quot;</span><span class="p">,</span> <span class="s2">&quot;BETY&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-        <span class="s2">&quot;Plotting beta functions for nominal, bare waist shift and improved waist shift scenarii.&quot;</span>
-    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting beta functions for nominal, bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
         <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
@@ -294,26 +287,20 @@
         <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">-</span> <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
         <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
         <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x^</span><span class="si">{bare}</span><span class="s2">$&quot;</span>
-        <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span>
-        <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y^</span><span class="si">{bare}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x^</span><span class="si">{bare}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y^</span><span class="si">{bare}</span><span class="s2">$&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
         <span class="n">after</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">-</span> <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
         <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
         <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x^</span><span class="si">{improved}</span><span class="s2">$&quot;</span>
-        <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span>
-        <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y^</span><span class="si">{improved}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_x^</span><span class="si">{improved}</span><span class="s2">$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_y^</span><span class="si">{improved}</span><span class="s2">$&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
         <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
 
-    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_</span><span class="si">{x}</span><span class="s2"> \ [m]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_</span><span class="si">{y}</span><span class="s2"> \ [m]$&quot;</span>
-    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Delta \beta_</span><span class="si">{x}</span><span class="s2"> \ [m]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BETX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\Delta \beta_</span><span class="si">{y}</span><span class="s2"> \ [m]$&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
 
 
@@ -346,9 +333,7 @@
 <span class="sd">            Defaults to `False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;MUX&quot;</span><span class="p">,</span> <span class="s2">&quot;MUY&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-        <span class="s2">&quot;Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.&quot;</span>
-    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
         <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
@@ -374,9 +359,7 @@
     <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
         <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
 
-    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{x}</span><span class="s2"> \ [2 \pi]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;MUX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{y}</span><span class="s2"> \ [2 \pi]$&quot;</span>
-    <span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{x}</span><span class="s2"> \ [2 \pi]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;MUX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{y}</span><span class="s2"> \ [2 \pi]$&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
 
 
@@ -408,15 +391,9 @@
 <span class="sd">        show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.</span>
 <span class="sd">            Defaults to `False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-        <span class="s2">&quot;Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.&quot;</span>
-    <span class="p">)</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">nominal</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">nominal</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nominal&quot;</span>
-    <span class="p">)</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">before</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">before</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bare Waist Shift&quot;</span>
-    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nominal</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">nominal</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">nominal</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nominal&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">before</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">before</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bare Waist Shift&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">after</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
         <span class="n">after</span><span class="o">.</span><span class="n">MUX</span> <span class="o">-</span> <span class="n">after</span><span class="o">.</span><span class="n">MUY</span><span class="p">,</span>
@@ -435,17 +412,13 @@
 <span class="c1"># ----- Helpers ----- #</span>
 
 
-<span class="k">def</span> <span class="nf">_highlight_ips_locations</span><span class="p">(</span>
-    <span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Figures out the ``S`` coordinate of IP[1258] locations from the given *dataframe* and adds</span>
 <span class="sd">    vertical lines for each one on the provided *axis*.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dfcopy</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">ips_dataframe</span> <span class="o">=</span> <span class="n">dfcopy</span><span class="p">[</span>
-        <span class="n">dfcopy</span><span class="o">.</span><span class="n">NAME</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;^IP[1258]$&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ips_dataframe</span> <span class="o">=</span> <span class="n">dfcopy</span><span class="p">[</span><span class="n">dfcopy</span><span class="o">.</span><span class="n">NAME</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;^IP[1258]$&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">row_tuple</span> <span class="ow">in</span> <span class="n">ips_dataframe</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
             <span class="n">row_tuple</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
