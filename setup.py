@@ -2,7 +2,7 @@ import pathlib
 
 import setuptools
 
-MODULE_NAME = "rws"
+MODULE_NAME = "pyrws"
 # The directory containing this file
 TOPLEVEL_DIR = pathlib.Path(__file__).parent.absolute()
 ABOUT_FILE = TOPLEVEL_DIR / MODULE_NAME / "__init__.py"
