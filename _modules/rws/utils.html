@@ -97,6 +97,8 @@
 
 <span class="sd">Provides miscellaneous utility functions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -106,6 +108,7 @@
 <span class="kn">from</span> <span class="nn">cpymad.madx</span> <span class="kn">import</span> <span class="n">Madx</span>
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
+<span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools.lhc</span> <span class="kn">import</span> <span class="n">get_lhc_tune_and_chroma_knobs</span>
 <span class="kn">from</span> <span class="nn">rws.constants</span> <span class="kn">import</span> <span class="n">EXPORT_TWISS_COLUMNS</span>
 
 <span class="n">Array</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]</span>
@@ -122,7 +125,7 @@
 <span class="sd">        ip (int): the IP for which to get the triplets powering knob values for.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A dictionary of the knob names and their values.</span>
+<span class="sd">        A `dict` of the knob names and their values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Querying triplets powering knob values around IP</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">right_knob</span><span class="p">,</span> <span class="n">left_knob</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;kqx.r</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;kqx.l</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># IP triplet default knobs (no trims)</span>
@@ -142,7 +145,7 @@
 <span class="sd">        ip (int): the IP around which to get the quadrupoles powering knobs for.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A dictionary of the knob names and their values.</span>
+<span class="sd">        A `dict` of the knob names and their values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Querying powering knob values for quadrupoles </span><span class="si">{</span><span class="n">quad_numbers</span><span class="si">}</span><span class="s2"> around IP</span><span class="si">{</span><span class="n">ip</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">powering_knobs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -153,6 +156,24 @@
             <span class="n">knob</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;kq</span><span class="si">{</span><span class="s1">&#39;t&#39;</span> <span class="k">if</span> <span class="n">quad</span> <span class="o">&gt;=</span> <span class="mi">11</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="s1">&#39;l&#39;</span> <span class="k">if</span> <span class="n">quad</span> <span class="o">==</span> <span class="mi">11</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">quad</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">ip</span><span class="si">}</span><span class="s2">b</span><span class="si">{</span><span class="n">beam</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">powering_knobs</span><span class="p">[</span><span class="n">knob</span><span class="p">]</span> <span class="o">=</span> <span class="n">madx</span><span class="o">.</span><span class="n">globals</span><span class="p">[</span><span class="n">knob</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">powering_knobs</span></div>
+
+
+<div class="viewcode-block" id="get_tunes_and_chroma_knobs"><a class="viewcode-back" href="../../modules/index.html#rws.utils.get_tunes_and_chroma_knobs">[docs]</a><span class="k">def</span> <span class="nf">get_tunes_and_chroma_knobs</span><span class="p">(</span><span class="n">madx</span><span class="p">:</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">telescopic_squeeze</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the tunes and chroma knobs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        madx (cpymad.madx.Madx): an instantiated `~cpymad.madx.Madx` object.</span>
+<span class="sd">        beam (int): the beam number to get knob values for.</span>
+<span class="sd">        telescopic_squeeze (bool): if set to `True`, returns the knobs for Telescopic</span>
+<span class="sd">            Squeeze configuration. Defaults to `True` to reflect run III scenarios.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `dict` of the knob names and their values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Querying tune and chroma knobs&quot;</span><span class="p">)</span>
+    <span class="n">knobs</span> <span class="o">=</span> <span class="n">get_lhc_tune_and_chroma_knobs</span><span class="p">(</span><span class="s2">&quot;lhc&quot;</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="n">telescopic_squeeze</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">knob_name</span><span class="p">:</span> <span class="n">madx</span><span class="o">.</span><span class="n">globals</span><span class="p">[</span><span class="n">knob_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">knob_name</span> <span class="ow">in</span> <span class="n">knobs</span><span class="p">}</span></div>
 
 
 <span class="c1"># ----- Computing Utilities ----- #</span>
@@ -331,6 +352,25 @@
         <span class="k">for</span> <span class="n">knob</span><span class="p">,</span> <span class="n">delta</span> <span class="ow">in</span> <span class="n">deltas_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span> <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;+&quot;</span>
             <span class="n">delta_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">knob</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">knob</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">operation</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;22</span><span class="si">}</span><span class="s2">;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_knobs_file"><a class="viewcode-back" href="../../modules/index.html#rws.utils.load_knobs_file">[docs]</a><span class="k">def</span> <span class="nf">load_knobs_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads the knob values from the file they are written in by `~.write_knob_powering`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filepath (Path): `~pathlib.Path` object to the file with the saved knob values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `~dict` of knob names and their values, in absolute powering.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading knob values from &#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">knob_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">filepath</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">knob_name</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">knob_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># last element is value, and we ignore the ;</span>
+        <span class="n">knob_dict</span><span class="p">[</span><span class="n">knob_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">knob_value</span>
+    <span class="k">return</span> <span class="n">knob_dict</span></div>
 </pre></div>
 
            </div>
