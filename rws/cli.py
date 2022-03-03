@@ -208,7 +208,7 @@ def create_knobs(
             madxb2.call(fullpath(sequence))
             madxb2.call(fullpath(opticsfile))
 
-            nominal_twiss_b2, nominal_triplets_b2, nominal_quads_b2 = get_nominal_beam_config(
+            nominal_twiss_b2, nominal_triplets_b2, nominal_quads_b2, nominal_wp_b2 = get_nominal_beam_config(
                 madxb2, beam=2, ip=ip, qx=qx, qy=qy
             )
 
@@ -222,16 +222,19 @@ def create_knobs(
             madxb2.call(fullpath(sequence))
             madxb2.call(fullpath(opticsfile))
 
-            bare_twiss_b2, bare_triplets_b2, bare_quads_b2 = get_bare_waist_shift_beam2_config(
+            bare_twiss_b2, bare_triplets_b2, bare_quads_b2, bare_wp_b2 = get_bare_waist_shift_beam2_config(
                 madxb2, ip=ip, triplet_knobs=matched_triplets_b1, qx=qx, qy=qy
             )
             bare_twiss_b2 = add_betabeating_columns(bare_twiss_b2, nominal_twiss_b2)
 
             logger.info("Refining beam 2 waist shift - this may take a while...")
-            matched_twiss_b2, matched_triplets_b2, matched_quads_b2 = get_matched_waist_shift_config(
+            matched_twiss_b2, matched_triplets_b2, matched_quads_b2, matched_wp_b2 = get_matched_waist_shift_config(
                 madxb2, beam=2, ip=ip, nominal_twiss=nominal_twiss_b2, bare_twiss=bare_twiss_b2, qx=qx, qy=qy
             )
             matched_twiss_b2 = add_betabeating_columns(matched_twiss_b2, nominal_twiss_b2)
+
+    # ----- Quick Sanity check ----- #
+    assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"
 
     # ----- Beam 2 Output Files ----- #
     logger.info("Writing out TFS files for beam 2")
@@ -242,15 +245,14 @@ def create_knobs(
     tfs.write(b2_tfs_dir / "matched_waist_b2.tfs", only_export_columns(matched_twiss_b2))
     tfs.write(b2_tfs_dir / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b2)))
 
-    # ----- Quick Sanity check ----- #
-    assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"
-
     # ----- Write B2 Knobs ----- #
     logger.info("Writing B2 knob powerings and deltas to disk")
     write_knob_powering(b2_knobs_dir / "triplets.madx", matched_triplets_b2)
     write_knob_powering(b2_knobs_dir / "quadrupoles.madx", matched_quads_b2)
+    write_knob_powering(b2_knobs_dir / "working_point.madx", matched_wp_b2)
     write_knob_delta(b2_knobs_dir / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
     write_knob_delta(b2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2)
+    write_knob_delta(b2_knobs_dir / "working_point_change.madx", nominal_wp_b2, matched_wp_b2)
 
     # ----- Generate Plots ----- #
     b1_figures = _generate_beam1_figures(
