@@ -118,7 +118,7 @@ def get_bare_waist_shift_beam1_config(
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1)
-    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=2)
+    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=1)
     return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
 
 
