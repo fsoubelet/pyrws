@@ -12,15 +12,13 @@ from typing import Dict, Sequence, Tuple
 
 import numpy as np
 import tfs
+
 from cpymad.madx import Madx
 from loguru import logger
-from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 
+from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 from rws.constants import VARIED_IR_QUADRUPOLES
-from rws.utils import (
-    get_independent_quadrupoles_powering_knobs,
-    get_triplets_powering_knobs,
-)
+from rws.utils import get_independent_quadrupoles_powering_knobs, get_triplets_powering_knobs
 
 # ----- Nominal Setup ----- #
 

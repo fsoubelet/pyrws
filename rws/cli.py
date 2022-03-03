@@ -9,12 +9,13 @@ from typing import Optional, Tuple
 import click
 import matplotlib
 import tfs
+
 from cpymad.madx import Madx
 from loguru import logger
 from matplotlib import pyplot as plt
+
 from pyhdtoolkit.utils._misc import fullpath
 from pyhdtoolkit.utils.defaults import config_logger
-
 from rws.core import (
     get_bare_waist_shift_beam1_config,
     get_bare_waist_shift_beam2_config,

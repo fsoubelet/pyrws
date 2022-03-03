@@ -11,6 +11,7 @@ from typing import Dict, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
+
 from cpymad.madx import Madx
 from loguru import logger
 

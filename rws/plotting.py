@@ -8,15 +8,14 @@ Module with functions to create different plots relevant to the rigid waist shif
 """
 import matplotlib
 import pandas as pd
+
 from loguru import logger
 from matplotlib import pyplot as plt
 
 # ----- Beta-Beating Plotters ----- #
 
 
-def plot_waist_shift_betabeatings(
-    axis: matplotlib.axes.Axes, dataframe: pd.DataFrame, show_ips: bool = False
-) -> None:
+def plot_waist_shift_betabeatings(axis: matplotlib.axes.Axes, dataframe: pd.DataFrame, show_ips: bool = False) -> None:
     """Plots the horizontal and vertical beta-beatings on the given *axis*.
 
     .. note::
@@ -84,9 +83,7 @@ def plot_waist_shift_betabeatings_comparison(
     """
     assert column in ("BBX", "BBY")
     logger.debug("Plotting waist shift induced beta-beating before and after matching.")
-    axis.plot(
-        before.S, 100 * before[column], "o", ls="", mfc="none", label="Bare Waist Shift"
-    )
+    axis.plot(before.S, 100 * before[column], "o", ls="", mfc="none", label="Bare Waist Shift")
     axis.plot(
         after.S,
         100 * after[column],
@@ -100,9 +97,7 @@ def plot_waist_shift_betabeatings_comparison(
         _highlight_ips_locations(axis, before)
 
     ylabel = (
-        r"$\frac{\Delta \beta_x}{\beta_x} \ [\%]$"
-        if column == "BBX"
-        else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
+        r"$\frac{\Delta \beta_x}{\beta_x} \ [\%]$" if column == "BBX" else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
     )
     axis.set_ylabel(ylabel)
     axis.legend()
@@ -137,9 +132,7 @@ def plot_betas_comparison(
             Defaults to `False`.
     """
     assert column in ("BETX", "BETY")
-    logger.debug(
-        "Plotting beta functions for nominal, bare waist shift and improved waist shift scenarii."
-    )
+    logger.debug("Plotting beta functions for nominal, bare waist shift and improved waist shift scenarii.")
     axis.plot(
         nominal.S,
         nominal[column],
@@ -203,26 +196,20 @@ def plot_betas_deviation(
         before[column] - nominal[column],
         ls="--",
         mfc="none",
-        label=r"$\Delta \beta_x^{bare}$"
-        if column == "BETX"
-        else r"$\Delta \beta_y^{bare}$",
+        label=r"$\Delta \beta_x^{bare}$" if column == "BETX" else r"$\Delta \beta_y^{bare}$",
     )
     axis.plot(
         after.S,
         after[column] - nominal[column],
         ls="--",
         mfc="none",
-        label=r"$\Delta \beta_x^{improved}$"
-        if column == "BETX"
-        else r"$\Delta \beta_y^{improved}$",
+        label=r"$\Delta \beta_x^{improved}$" if column == "BETX" else r"$\Delta \beta_y^{improved}$",
     )
 
     if show_ips:
         _highlight_ips_locations(axis, nominal)
 
-    axis.set_ylabel(
-        r"$\Delta \beta_{x} \ [m]$" if column == "BETX" else r"$\Delta \beta_{y} \ [m]$"
-    )
+    axis.set_ylabel(r"$\Delta \beta_{x} \ [m]$" if column == "BETX" else r"$\Delta \beta_{y} \ [m]$")
     axis.legend()
 
 
@@ -255,9 +242,7 @@ def plot_phase_advances_comparison(
             Defaults to `False`.
     """
     assert column in ("MUX", "MUY")
-    logger.debug(
-        "Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii."
-    )
+    logger.debug("Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.")
     axis.plot(
         nominal.S,
         nominal[column],
@@ -283,9 +268,7 @@ def plot_phase_advances_comparison(
     if show_ips:
         _highlight_ips_locations(axis, nominal)
 
-    axis.set_ylabel(
-        r"$\mu_{x} \ [2 \pi]$" if column == "MUX" else r"$\mu_{y} \ [2 \pi]$"
-    )
+    axis.set_ylabel(r"$\mu_{x} \ [2 \pi]$" if column == "MUX" else r"$\mu_{y} \ [2 \pi]$")
     axis.legend()
 
 
@@ -317,15 +300,9 @@ def plot_phase_differences(
         show_ips (bool): if `True`, will show the IPs locations with vertical lines on the plot.
             Defaults to `False`.
     """
-    logger.debug(
-        "Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii."
-    )
-    axis.plot(
-        nominal.S, nominal.MUX - nominal.MUY, ls="--", mfc="none", label="Nominal"
-    )
-    axis.plot(
-        before.S, before.MUX - before.MUY, ls="--", mfc="none", label="Bare Waist Shift"
-    )
+    logger.debug("Plotting phase advances for nominal, bare waist shift and improved waist shift scenarii.")
+    axis.plot(nominal.S, nominal.MUX - nominal.MUY, ls="--", mfc="none", label="Nominal")
+    axis.plot(before.S, before.MUX - before.MUY, ls="--", mfc="none", label="Bare Waist Shift")
     axis.plot(
         after.S,
         after.MUX - after.MUY,
@@ -344,17 +321,13 @@ def plot_phase_differences(
 # ----- Helpers ----- #
 
 
-def _highlight_ips_locations(
-    axis: matplotlib.axes.Axes, dataframe: pd.DataFrame
-) -> None:
+def _highlight_ips_locations(axis: matplotlib.axes.Axes, dataframe: pd.DataFrame) -> None:
     """
     Figures out the ``S`` coordinate of IP[1258] locations from the given *dataframe* and adds
     vertical lines for each one on the provided *axis*.
     """
     dfcopy = dataframe.reset_index()
-    ips_dataframe = dfcopy[
-        dfcopy.NAME.str.contains("^IP[1258]$", case=False)
-    ].reset_index(drop=True)
+    ips_dataframe = dfcopy[dfcopy.NAME.str.contains("^IP[1258]$", case=False)].reset_index(drop=True)
     for row_tuple in ips_dataframe.itertuples():
         axis.axvline(
             row_tuple.S,

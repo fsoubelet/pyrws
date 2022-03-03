@@ -9,5 +9,3 @@ __version__ = "0.1.0"
 __author__ = "Felix Soubelet"
 __author_email__ = "felix.soubelet@cern.ch"
 __license__ = "MIT"
-
-__all__ = [__version__]
