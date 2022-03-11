@@ -14,8 +14,10 @@ from cpymad.madx import Madx
 from loguru import logger
 from matplotlib import pyplot as plt
 
+from pyhdtoolkit.cpymadtools import lhc
 from pyhdtoolkit.utils._misc import fullpath
 from pyhdtoolkit.utils.defaults import config_logger
+from pyrws.constants import AFFECTED_ELEMENTS
 from pyrws.core import (
     get_bare_waist_shift_beam1_config,
     get_bare_waist_shift_beam2_config,
@@ -133,6 +135,7 @@ def create_knobs(
     # ----- Configuration ----- #
     config_logger(level=loglevel)
     b1_dirs, b2_dirs = prepare_output_directories(outputdir)
+
     if mplstyle:
         plt.style.use(mplstyle)
 
@@ -140,6 +143,7 @@ def create_knobs(
     logger.info("Preparing beam 1 nominal configuration")
     nominal_b1_in = b1_dirs["main"] / "nominal_b1.madx"
     nominal_b1_out = b1_dirs["main"] / "nominal_b1.out"
+    affected_b1_elements = [element.format(ip=ip, beam=1) for element in AFFECTED_ELEMENTS]
     with nominal_b1_in.open("w") as commands, nominal_b1_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb1:
             madxb1.option(echo=False, warn=False)
@@ -149,6 +153,7 @@ def create_knobs(
             nominal_twiss_b1, nominal_triplets_b1, nominal_quads_b1, nominal_wp_b1 = get_nominal_beam_config(
                 madxb1, beam=1, ip=ip, qx=qx, qy=qy
             )
+            nominal_b1_fields = lhc.get_magnets_powering(madxb1, patterns=affected_b1_elements)
 
     # ----- Beam 1 Waist Shift ----- #
     logger.info("Preparing beam 1 waist shift configuration")
@@ -160,7 +165,7 @@ def create_knobs(
             madxb1.call(fullpath(sequence))
             madxb1.call(fullpath(opticsfile))
 
-            bare_twiss_b1, bare_triplets_b1, bare_quads_b1, bare_wp_b1 = get_bare_waist_shift_beam1_config(
+            bare_twiss_b1, _, _, _ = get_bare_waist_shift_beam1_config(
                 madxb1, ip=ip, rigidty_waist_shift_value=waist_shift_setting, qx=qx, qy=qy
             )
             bare_twiss_b1 = add_betabeating_columns(bare_twiss_b1, nominal_twiss_b1)
@@ -170,6 +175,7 @@ def create_knobs(
                 madxb1, beam=1, ip=ip, nominal_twiss=nominal_twiss_b1, bare_twiss=bare_twiss_b1, qx=qx, qy=qy
             )
             matched_twiss_b1 = add_betabeating_columns(matched_twiss_b1, nominal_twiss_b1)
+            matched_b1_fields = lhc.get_magnets_powering(madxb1, patterns=affected_b1_elements)
 
     # ----- Beam 1 Output Files ----- #
     logger.info("Writing out TFS files for beam 1")
@@ -179,6 +185,8 @@ def create_knobs(
     tfs.write(b1_dirs["tfs"] / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b1)))
     tfs.write(b1_dirs["tfs"] / "matched_waist_b1.tfs", only_export_columns(matched_twiss_b1))
     tfs.write(b1_dirs["tfs"] / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b1)))
+    tfs.write(b1_dirs["tfs"] / "nominal_b1_fields.tfs", nominal_b1_fields)
+    tfs.write(b1_dirs["tfs"] / "matched_waist_b1_fields.tfs", matched_b1_fields)
 
     # ----- Write B1 Knobs ----- #
     logger.info("Writing B1 knob powerings and deltas to disk")
@@ -193,6 +201,7 @@ def create_knobs(
     logger.info("Preparing beam 2 nominal configuration")
     nominal_b2_in = b2_dirs["main"] / "nominal_b2.madx"
     nominal_b2_out = b2_dirs["main"] / "nominal_b2.out"
+    affected_b2_elements = [element.format(ip=ip, beam=2) for element in AFFECTED_ELEMENTS]
     with nominal_b2_in.open("w") as commands, nominal_b2_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb2:
             madxb2.option(echo=False, warn=False)
@@ -202,6 +211,7 @@ def create_knobs(
             nominal_twiss_b2, nominal_triplets_b2, nominal_quads_b2, nominal_wp_b2 = get_nominal_beam_config(
                 madxb2, beam=2, ip=ip, qx=qx, qy=qy
             )
+            nominal_b2_fields = lhc.get_magnets_powering(madxb2, patterns=affected_b2_elements)
 
     # ----- Beam 2 Waist Shift ----- #
     logger.info("Preparing beam 1 waist shift configuration")
@@ -213,7 +223,7 @@ def create_knobs(
             madxb2.call(fullpath(sequence))
             madxb2.call(fullpath(opticsfile))
 
-            bare_twiss_b2, bare_triplets_b2, bare_quads_b2, bare_wp_b2 = get_bare_waist_shift_beam2_config(
+            bare_twiss_b2, _, _, _ = get_bare_waist_shift_beam2_config(
                 madxb2, ip=ip, triplet_knobs=matched_triplets_b1, qx=qx, qy=qy
             )
             bare_twiss_b2 = add_betabeating_columns(bare_twiss_b2, nominal_twiss_b2)
@@ -223,6 +233,7 @@ def create_knobs(
                 madxb2, beam=2, ip=ip, nominal_twiss=nominal_twiss_b2, bare_twiss=bare_twiss_b2, qx=qx, qy=qy
             )
             matched_twiss_b2 = add_betabeating_columns(matched_twiss_b2, nominal_twiss_b2)
+            matched_b2_fields = lhc.get_magnets_powering(madxb2, patterns=affected_b2_elements)
 
     # ----- Quick Sanity check ----- #
     assert matched_triplets_b1 == matched_triplets_b2, "Triplet knobs are different for B1 and B2!"
@@ -235,6 +246,8 @@ def create_knobs(
     tfs.write(b2_dirs["tfs"] / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b2)))
     tfs.write(b2_dirs["tfs"] / "matched_waist_b2.tfs", only_export_columns(matched_twiss_b2))
     tfs.write(b2_dirs["tfs"] / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b2)))
+    tfs.write(b2_dirs["tfs"] / "nominal_b2_fields.tfs", nominal_b2_fields)
+    tfs.write(b2_dirs["tfs"] / "matched_waist_b2_fields.tfs", matched_b2_fields)
 
     # ----- Write B2 Knobs ----- #
     logger.info("Writing B2 knob powerings and deltas to disk")
@@ -246,7 +259,7 @@ def create_knobs(
     write_knob_delta(b2_dirs["knobs"] / "working_point_change.madx", nominal_wp_b2, matched_wp_b2)
 
     # ----- Generate Plots ----- #
-    b1_figures = _generate_beam1_figures(
+    _ = _generate_beam1_figures(
         plots_dir=b1_dirs["plots"],
         nominal_b1=nominal_twiss_b1,
         bare_b1=bare_twiss_b1,
@@ -254,7 +267,7 @@ def create_knobs(
         # kwargs
         figsize=figsize,
     )
-    b2_figures = _generate_beam2_figures(
+    _ = _generate_beam2_figures(
         plots_dir=b2_dirs["plots"],
         nominal_b2=nominal_twiss_b2,
         bare_b2=bare_twiss_b2,
