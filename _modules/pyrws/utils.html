@@ -270,7 +270,7 @@
 <span class="c1"># ----- FileSystem Utilities ----- #</span>
 
 
-<div class="viewcode-block" id="prepare_output_directories"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.prepare_output_directories">[docs]</a><span class="k">def</span> <span class="nf">prepare_output_directories</span><span class="p">(</span><span class="n">outputdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
+<div class="viewcode-block" id="prepare_output_directories"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.prepare_output_directories">[docs]</a><span class="k">def</span> <span class="nf">prepare_output_directories</span><span class="p">(</span><span class="n">outputdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates the proper directories where the output files will be written.</span>
 
@@ -279,9 +279,9 @@
 <span class="sd">            at the command line.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        The `~pathlib.Path` objects to the created output directories. In order, these</span>
-<span class="sd">        are for beam1, beam1 tfs files, beam1 knobs, beam1 plots, beam2, beam2 tfs files,</span>
-<span class="sd">        beam2 knobs and beam2 plots.</span>
+<span class="sd">        A `dict` for each beam, with as keys the `~pathlib.Path` objects to the created output</span>
+<span class="sd">        directories. In order, these are for main directory, tfs files dir, knobs dir and plots</span>
+<span class="sd">        dir. The keys or the `dict` are ``main``, ``tfs``, ``knobs`` and ``plots``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating output directory at &#39;</span><span class="si">{</span><span class="n">outputdir</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
     <span class="n">outputdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -321,15 +321,20 @@
     <span class="n">beam2_plots_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span>
-        <span class="n">beam1_dir</span><span class="p">,</span>
-        <span class="n">beam1_tfs_dir</span><span class="p">,</span>
-        <span class="n">beam1_knobs_dir</span><span class="p">,</span>
-        <span class="n">beam1_plots_dir</span><span class="p">,</span>
-        <span class="n">beam2_dir</span><span class="p">,</span>
-        <span class="n">beam2_tfs_dir</span><span class="p">,</span>
-        <span class="n">beam2_knobs_dir</span><span class="p">,</span>
-        <span class="n">beam2_plots_dir</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;main&quot;</span><span class="p">:</span> <span class="n">beam1_dir</span><span class="p">,</span> <span class="s2">&quot;tfs&quot;</span><span class="p">:</span> <span class="n">beam1_tfs_dir</span><span class="p">,</span> <span class="s2">&quot;knobs&quot;</span><span class="p">:</span> <span class="n">beam1_knobs_dir</span><span class="p">,</span> <span class="s2">&quot;plots&quot;</span><span class="p">:</span> <span class="n">beam1_plots_dir</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;main&quot;</span><span class="p">:</span> <span class="n">beam2_dir</span><span class="p">,</span> <span class="s2">&quot;tfs&quot;</span><span class="p">:</span> <span class="n">beam2_tfs_dir</span><span class="p">,</span> <span class="s2">&quot;knobs&quot;</span><span class="p">:</span> <span class="n">beam2_knobs_dir</span><span class="p">,</span> <span class="s2">&quot;plots&quot;</span><span class="p">:</span> <span class="n">beam2_plots_dir</span><span class="p">},</span>
     <span class="p">)</span></div>
+
+    <span class="c1"># return (</span>
+    <span class="c1">#     beam1_dir,</span>
+    <span class="c1">#     beam1_tfs_dir,</span>
+    <span class="c1">#     beam1_knobs_dir,</span>
+    <span class="c1">#     beam1_plots_dir,</span>
+    <span class="c1">#     beam2_dir,</span>
+    <span class="c1">#     beam2_tfs_dir,</span>
+    <span class="c1">#     beam2_knobs_dir,</span>
+    <span class="c1">#     beam2_plots_dir,</span>
+    <span class="c1"># )</span>
 
 
 <div class="viewcode-block" id="write_knob_powering"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.write_knob_powering">[docs]</a><span class="k">def</span> <span class="nf">write_knob_powering</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">knob_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
