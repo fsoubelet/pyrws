@@ -179,7 +179,7 @@ def only_monitors(dataframe: pd.DataFrame) -> pd.DataFrame:
 # ----- FileSystem Utilities ----- #
 
 
-def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path, Path, Path, Path, Path]:
+def prepare_output_directories(outputdir: Path) -> Tuple[Dict[str, Path], Dict[str, Path]]:
     """
     Creates the proper directories where the output files will be written.
 
@@ -188,9 +188,9 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
             at the command line.
 
     Returns:
-        The `~pathlib.Path` objects to the created output directories. In order, these
-        are for beam1, beam1 tfs files, beam1 knobs, beam1 plots, beam2, beam2 tfs files,
-        beam2 knobs and beam2 plots.
+        A `dict` for each beam, with as keys the `~pathlib.Path` objects to the created output
+        directories. In order, these are for main directory, tfs files dir, knobs dir and plots
+        dir. The keys or the `dict` are ``main``, ``tfs``, ``knobs`` and ``plots``.
     """
     logger.debug(f"Creating output directory at '{outputdir.absolute()}'.")
     outputdir.mkdir(parents=True, exist_ok=True)
@@ -230,15 +230,20 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Path, Path, Path, Path,
     beam2_plots_dir.mkdir(parents=True, exist_ok=True)
 
     return (
-        beam1_dir,
-        beam1_tfs_dir,
-        beam1_knobs_dir,
-        beam1_plots_dir,
-        beam2_dir,
-        beam2_tfs_dir,
-        beam2_knobs_dir,
-        beam2_plots_dir,
+        {"main": beam1_dir, "tfs": beam1_tfs_dir, "knobs": beam1_knobs_dir, "plots": beam1_plots_dir},
+        {"main": beam2_dir, "tfs": beam2_tfs_dir, "knobs": beam2_knobs_dir, "plots": beam2_plots_dir},
     )
+
+    # return (
+    #     beam1_dir,
+    #     beam1_tfs_dir,
+    #     beam1_knobs_dir,
+    #     beam1_plots_dir,
+    #     beam2_dir,
+    #     beam2_tfs_dir,
+    #     beam2_knobs_dir,
+    #     beam2_plots_dir,
+    # )
 
 
 def write_knob_powering(file_path: Path, knob_dict: Dict[str, float]) -> None:

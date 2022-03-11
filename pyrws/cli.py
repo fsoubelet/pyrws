@@ -132,23 +132,14 @@ def create_knobs(
 ):
     # ----- Configuration ----- #
     config_logger(level=loglevel)
-    (
-        b1_dir,
-        b1_tfs_dir,
-        b1_knobs_dir,
-        b1_plots_dir,
-        b2_dir,
-        b2_tfs_dir,
-        b2_knobs_dir,
-        b2_plots_dir,
-    ) = prepare_output_directories(outputdir)
+    b1_dirs, b2_dirs = prepare_output_directories(outputdir)
     if mplstyle:
         plt.style.use(mplstyle)
 
     # ----- Beam 1 Nominal ----- #
     logger.info("Preparing beam 1 nominal configuration")
-    nominal_b1_in = b1_dir / "nominal_b1.madx"
-    nominal_b1_out = b1_dir / "nominal_b1.out"
+    nominal_b1_in = b1_dirs["main"] / "nominal_b1.madx"
+    nominal_b1_out = b1_dirs["main"] / "nominal_b1.out"
     with nominal_b1_in.open("w") as commands, nominal_b1_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb1:
             madxb1.option(echo=False, warn=False)
@@ -161,8 +152,8 @@ def create_knobs(
 
     # ----- Beam 1 Waist Shift ----- #
     logger.info("Preparing beam 1 waist shift configuration")
-    waist_b1_in = b1_dir / "waist_b1.madx"
-    waist_b1_out = b1_dir / "waist_b1.out"
+    waist_b1_in = b1_dirs["main"] / "waist_b1.madx"
+    waist_b1_out = b1_dirs["main"] / "waist_b1.out"
     with waist_b1_in.open("w") as commands, waist_b1_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb1:
             madxb1.option(echo=False, warn=False)
@@ -182,26 +173,26 @@ def create_knobs(
 
     # ----- Beam 1 Output Files ----- #
     logger.info("Writing out TFS files for beam 1")
-    tfs.write(b1_tfs_dir / "nominal_b1.tfs", only_export_columns(nominal_twiss_b1))
-    tfs.write(b1_tfs_dir / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(nominal_twiss_b1)))
-    tfs.write(b1_tfs_dir / "bare_waist_b1.tfs", only_export_columns(bare_twiss_b1))
-    tfs.write(b1_tfs_dir / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b1)))
-    tfs.write(b1_tfs_dir / "matched_waist_b1.tfs", only_export_columns(matched_twiss_b1))
-    tfs.write(b1_tfs_dir / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b1)))
+    tfs.write(b1_dirs["tfs"] / "nominal_b1.tfs", only_export_columns(nominal_twiss_b1))
+    tfs.write(b1_dirs["tfs"] / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(nominal_twiss_b1)))
+    tfs.write(b1_dirs["tfs"] / "bare_waist_b1.tfs", only_export_columns(bare_twiss_b1))
+    tfs.write(b1_dirs["tfs"] / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b1)))
+    tfs.write(b1_dirs["tfs"] / "matched_waist_b1.tfs", only_export_columns(matched_twiss_b1))
+    tfs.write(b1_dirs["tfs"] / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b1)))
 
     # ----- Write B1 Knobs ----- #
     logger.info("Writing B1 knob powerings and deltas to disk")
-    write_knob_powering(b1_knobs_dir / "triplets.madx", matched_triplets_b1)
-    write_knob_powering(b1_knobs_dir / "quadrupoles.madx", matched_quads_b1)
-    write_knob_powering(b1_knobs_dir / "working_point.madx", matched_wp_b1)
-    write_knob_delta(b1_knobs_dir / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
-    write_knob_delta(b1_knobs_dir / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
-    write_knob_delta(b1_knobs_dir / "working_point_change.madx", nominal_wp_b1, matched_wp_b1)
+    write_knob_powering(b1_dirs["knobs"] / "triplets.madx", matched_triplets_b1)
+    write_knob_powering(b1_dirs["knobs"] / "quadrupoles.madx", matched_quads_b1)
+    write_knob_powering(b1_dirs["knobs"] / "working_point.madx", matched_wp_b1)
+    write_knob_delta(b1_dirs["knobs"] / "triplets_change.madx", nominal_triplets_b1, matched_triplets_b1)
+    write_knob_delta(b1_dirs["knobs"] / "quadrupoles_change.madx", nominal_quads_b1, matched_quads_b1)
+    write_knob_delta(b1_dirs["knobs"] / "working_point_change.madx", nominal_wp_b1, matched_wp_b1)
 
     # ----- Beam 2 Nominal ----- #
     logger.info("Preparing beam 2 nominal configuration")
-    nominal_b2_in = b2_dir / "nominal_b2.madx"
-    nominal_b2_out = b2_dir / "nominal_b2.out"
+    nominal_b2_in = b2_dirs["main"] / "nominal_b2.madx"
+    nominal_b2_out = b2_dirs["main"] / "nominal_b2.out"
     with nominal_b2_in.open("w") as commands, nominal_b2_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb2:
             madxb2.option(echo=False, warn=False)
@@ -214,8 +205,8 @@ def create_knobs(
 
     # ----- Beam 2 Waist Shift ----- #
     logger.info("Preparing beam 1 waist shift configuration")
-    waist_b2_in = b2_dir / "waist_b2.madx"
-    waist_b2_out = b2_dir / "waist_b2.out"
+    waist_b2_in = b2_dirs["main"] / "waist_b2.madx"
+    waist_b2_out = b2_dirs["main"] / "waist_b2.out"
     with waist_b2_in.open("w") as commands, waist_b2_out.open("w") as outputs:
         with Madx(command_log=commands, stdout=outputs) as madxb2:
             madxb2.option(echo=False, warn=False)
@@ -238,25 +229,25 @@ def create_knobs(
 
     # ----- Beam 2 Output Files ----- #
     logger.info("Writing out TFS files for beam 2")
-    tfs.write(b2_tfs_dir / "nominal_b2.tfs", only_export_columns(nominal_twiss_b2))
-    tfs.write(b2_tfs_dir / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(nominal_twiss_b2)))
-    tfs.write(b2_tfs_dir / "bare_waist_b2.tfs", only_export_columns(bare_twiss_b2))
-    tfs.write(b2_tfs_dir / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b2)))
-    tfs.write(b2_tfs_dir / "matched_waist_b2.tfs", only_export_columns(matched_twiss_b2))
-    tfs.write(b2_tfs_dir / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b2)))
+    tfs.write(b2_dirs["tfs"] / "nominal_b2.tfs", only_export_columns(nominal_twiss_b2))
+    tfs.write(b2_dirs["tfs"] / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(nominal_twiss_b2)))
+    tfs.write(b2_dirs["tfs"] / "bare_waist_b2.tfs", only_export_columns(bare_twiss_b2))
+    tfs.write(b2_dirs["tfs"] / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(bare_twiss_b2)))
+    tfs.write(b2_dirs["tfs"] / "matched_waist_b2.tfs", only_export_columns(matched_twiss_b2))
+    tfs.write(b2_dirs["tfs"] / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(matched_twiss_b2)))
 
     # ----- Write B2 Knobs ----- #
     logger.info("Writing B2 knob powerings and deltas to disk")
-    write_knob_powering(b2_knobs_dir / "triplets.madx", matched_triplets_b2)
-    write_knob_powering(b2_knobs_dir / "quadrupoles.madx", matched_quads_b2)
-    write_knob_powering(b2_knobs_dir / "working_point.madx", matched_wp_b2)
-    write_knob_delta(b2_knobs_dir / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
-    write_knob_delta(b2_knobs_dir / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2)
-    write_knob_delta(b2_knobs_dir / "working_point_change.madx", nominal_wp_b2, matched_wp_b2)
+    write_knob_powering(b2_dirs["knobs"] / "triplets.madx", matched_triplets_b2)
+    write_knob_powering(b2_dirs["knobs"] / "quadrupoles.madx", matched_quads_b2)
+    write_knob_powering(b2_dirs["knobs"] / "working_point.madx", matched_wp_b2)
+    write_knob_delta(b2_dirs["knobs"] / "triplets_change.madx", nominal_triplets_b2, matched_triplets_b2)
+    write_knob_delta(b2_dirs["knobs"] / "quadrupoles_change.madx", nominal_quads_b2, matched_quads_b2)
+    write_knob_delta(b2_dirs["knobs"] / "working_point_change.madx", nominal_wp_b2, matched_wp_b2)
 
     # ----- Generate Plots ----- #
     b1_figures = _generate_beam1_figures(
-        plots_dir=b1_plots_dir,
+        plots_dir=b1_dirs["plots"],
         nominal_b1=nominal_twiss_b1,
         bare_b1=bare_twiss_b1,
         matched_b1=matched_twiss_b1,
@@ -264,7 +255,7 @@ def create_knobs(
         figsize=figsize,
     )
     b2_figures = _generate_beam2_figures(
-        plots_dir=b2_plots_dir,
+        plots_dir=b2_dirs["plots"],
         nominal_b2=nominal_twiss_b2,
         bare_b2=bare_twiss_b2,
         matched_b2=matched_twiss_b2,
