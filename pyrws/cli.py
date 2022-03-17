@@ -3,6 +3,7 @@
 
 Main command line script.
 """
+from lib2to3.pgen2.token import OP
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -78,6 +79,7 @@ from pyrws.utils import (
     help="Directory in which to write output files. Defaults to 'outputs/' in the current working directory.",
 )
 # ----- Optional Arguments ----- #
+@click.option("--energy", type=click.FloatRange(min=0), default=6800, show_default=True, help="Beam energy in [GeV]")
 @click.option(
     "--qx",
     type=click.FloatRange(min=0),
@@ -125,6 +127,7 @@ def create_knobs(
     ip: int,
     waist_shift_setting: float,
     outputdir: Path,
+    energy: Optional[float],
     qx: Optional[float],
     qy: Optional[float],
     show_plots: Optional[bool],
@@ -151,7 +154,7 @@ def create_knobs(
             madxb1.call(fullpath(opticsfile))
 
             nominal_twiss_b1, nominal_triplets_b1, nominal_quads_b1, nominal_wp_b1 = get_nominal_beam_config(
-                madxb1, beam=1, ip=ip, qx=qx, qy=qy
+                madxb1, energy=energy, beam=1, ip=ip, qx=qx, qy=qy
             )
             nominal_b1_fields = lhc.get_magnets_powering(madxb1, patterns=affected_b1_elements)
 
@@ -166,7 +169,7 @@ def create_knobs(
             madxb1.call(fullpath(opticsfile))
 
             bare_twiss_b1, _, _, _ = get_bare_waist_shift_beam1_config(
-                madxb1, ip=ip, rigidty_waist_shift_value=waist_shift_setting, qx=qx, qy=qy
+                madxb1, ip=ip, rigidty_waist_shift_value=waist_shift_setting, energy=energy, qx=qx, qy=qy
             )
             bare_twiss_b1 = add_betabeating_columns(bare_twiss_b1, nominal_twiss_b1)
 
@@ -209,7 +212,7 @@ def create_knobs(
             madxb2.call(fullpath(opticsfile))
 
             nominal_twiss_b2, nominal_triplets_b2, nominal_quads_b2, nominal_wp_b2 = get_nominal_beam_config(
-                madxb2, beam=2, ip=ip, qx=qx, qy=qy
+                madxb2, energy=energy, beam=2, ip=ip, qx=qx, qy=qy
             )
             nominal_b2_fields = lhc.get_magnets_powering(madxb2, patterns=affected_b2_elements)
 
@@ -224,7 +227,7 @@ def create_knobs(
             madxb2.call(fullpath(opticsfile))
 
             bare_twiss_b2, _, _, _ = get_bare_waist_shift_beam2_config(
-                madxb2, ip=ip, triplet_knobs=matched_triplets_b1, qx=qx, qy=qy
+                madxb2, ip=ip, triplet_knobs=matched_triplets_b1, energy=energy, qx=qx, qy=qy
             )
             bare_twiss_b2 = add_betabeating_columns(bare_twiss_b2, nominal_twiss_b2)
 

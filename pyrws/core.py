@@ -28,7 +28,7 @@ from pyrws.utils import (
 
 
 def get_nominal_beam_config(
-    madx: Madx, beam: int, ip: int, qx: float, qy: float
+    madx: Madx, energy: float, beam: int, ip: int, qx: float, qy: float
 ) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Provided with an active `~cpymad.madx.Madx` object, will match to the working point defined
@@ -48,6 +48,7 @@ def get_nominal_beam_config(
 
     Args:
         madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.
+        energy (float): beam energy for the setup, in [GeV].
         beam (int): the beam number, should be 1 or 2.
         ip (int): the IP for which to get triplets and independent quadrupoles powering
             knobs values.
@@ -64,7 +65,7 @@ def get_nominal_beam_config(
     assert ip in (1, 5)
     logger.debug("Setting up nominal beam and matching tunes")
     lhc.re_cycle_sequence(madx, sequence=f"lhcb{beam:d}", start=f"MSIA.EXIT.B{beam:d}")
-    lhc.make_lhc_beams(madx, energy=6800, emittance=3.75e-6)
+    lhc.make_lhc_beams(madx, energy=energy, emittance=3.75e-6)
     _ = orbit.setup_lhc_orbit(madx, scheme="flat")
     madx.command.use(sequence=f"lhcb{beam:d}")
 
@@ -80,7 +81,7 @@ def get_nominal_beam_config(
 
 
 def get_bare_waist_shift_beam1_config(
-    madx: Madx, ip: int, rigidty_waist_shift_value: float, qx: float, qy: float
+    madx: Madx, ip: int, rigidty_waist_shift_value: float, energy: float, qx: float, qy: float
 ) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding
@@ -99,6 +100,7 @@ def get_bare_waist_shift_beam1_config(
         rigidty_waist_shift_value (float): applied unit setting of the rigidity
             waist shift knob. A value of 1 changes the powering of the triplets
             knob by 0.5%.
+        energy (float): beam energy for the setup, in [GeV].
         qx (float): the horizontal tune to re-match to after applying the rigid
             waist shift.
         qy (float): the vertical tune to re-match to after applying the rigit
@@ -110,7 +112,7 @@ def get_bare_waist_shift_beam1_config(
         IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
         (tunes and chroma).
     """
-    _ = get_nominal_beam_config(madx, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
+    _ = get_nominal_beam_config(madx, energy=energy, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 1 at IP{ip}")
     lhc.apply_lhc_rigidity_waist_shift_knob(madx, rigidty_waist_shift_value=rigidty_waist_shift_value, ir=ip)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb1", qx, qy, 2.0, 2.0, calls=200)
@@ -123,7 +125,7 @@ def get_bare_waist_shift_beam1_config(
 
 
 def get_bare_waist_shift_beam2_config(
-    madx: Madx, ip: int, triplet_knobs: Dict[str, float], qx: float, qy: float
+    madx: Madx, ip: int, triplet_knobs: Dict[str, float], energy: float, qx: float, qy: float
 ) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
     """
     Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding
@@ -143,6 +145,7 @@ def get_bare_waist_shift_beam2_config(
         ip (int): the IP at which to apply the rigid waist shift.
         triplet_knobs (float): the triplets powering knob values for the given *ip*, as returned by
             `~.get_bare_waist_shift_beam1_config`.
+        energy (float): beam energy for the setup, in [GeV].
         qx (float): the horizontal tune to re-match to after applying the rigid
             waist shift.
         qy (float): the vertical tune to re-match to after applying the rigit
@@ -154,7 +157,7 @@ def get_bare_waist_shift_beam2_config(
         IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
         (tunes and chroma).
     """
-    _ = get_nominal_beam_config(madx, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
+    _ = get_nominal_beam_config(madx, energy=energy, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
     logger.debug(f"Triplet knobs are: {triplet_knobs}")
     with madx.batch():
