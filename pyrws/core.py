@@ -7,10 +7,9 @@ Core Functionality
 Module with functions to perform the rigid waist shift and matching through a
 `~cpymad.madx.Madx` object.
 """
-from pathlib import Path
-from typing import Dict, Sequence, Tuple
+from dataclasses import dataclass
+from typing import Dict, Tuple
 
-import numpy as np
 import tfs
 
 from cpymad.madx import Madx
@@ -24,12 +23,19 @@ from pyrws.utils import (
     get_tunes_and_chroma_knobs,
 )
 
+
+@dataclass
+class BeamConfig:
+    twiss_tfs: tfs.TfsDataFrame
+    triplets_knobs: Dict[str, float]
+    quads_knobs: Dict[str, float]
+    working_point_knobs: Dict[str, float]
+
+
 # ----- Nominal Setup ----- #
 
 
-def get_nominal_beam_config(
-    madx: Madx, energy: float, beam: int, ip: int, qx: float, qy: float
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
+def get_nominal_beam_config(madx: Madx, energy: float, beam: int, ip: int, qx: float, qy: float) -> BeamConfig:
     """
     Provided with an active `~cpymad.madx.Madx` object, will match to the working point defined
     by the provided tunes *qx* and *qy* and return the nominal configuration for the provided *beam*
@@ -74,7 +80,12 @@ def get_nominal_beam_config(
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
     working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=beam)
-    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
+    return BeamConfig(
+        twiss_tfs=twiss_df,
+        triplets_knobs=triplets_knobs,
+        quads_knobs=quads_knobs,
+        working_point_knobs=working_point_knobs,
+    )
 
 
 # ----- Implement Bare Waist Shift ----- #
@@ -82,7 +93,7 @@ def get_nominal_beam_config(
 
 def get_bare_waist_shift_beam1_config(
     madx: Madx, ip: int, rigidty_waist_shift_value: float, energy: float, qx: float, qy: float
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
+) -> BeamConfig:
     """
     Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding
     configuration for beam 1 (twiss table, triplet knobs, independent IR quadrupoles knobs).
@@ -121,12 +132,17 @@ def get_bare_waist_shift_beam1_config(
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=1)
     working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=1)
-    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
+    return BeamConfig(
+        twiss_tfs=twiss_df,
+        triplets_knobs=triplets_knobs,
+        quads_knobs=quads_knobs,
+        working_point_knobs=working_point_knobs,
+    )
 
 
 def get_bare_waist_shift_beam2_config(
     madx: Madx, ip: int, triplet_knobs: Dict[str, float], energy: float, qx: float, qy: float
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
+) -> BeamConfig:
     """
     Applies the rigid waist shift at the provided *ip* for beam 1, and returns the corresponding
     configuration for beam 1 (twiss table, triplet knobs, independent IR quadrupoles knobs).
@@ -168,7 +184,12 @@ def get_bare_waist_shift_beam2_config(
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=2)
     working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=2)
-    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
+    return BeamConfig(
+        twiss_tfs=twiss_df,
+        triplets_knobs=triplets_knobs,
+        quads_knobs=quads_knobs,
+        working_point_knobs=working_point_knobs,
+    )
 
 
 # ----- Match for the Improved Waist Shift ----- #
@@ -182,7 +203,7 @@ def get_matched_waist_shift_config(
     bare_twiss: tfs.TfsDataFrame,
     qx: float,
     qy: float,
-) -> Tuple[tfs.TfsDataFrame, Dict[str, float], Dict[str, float], Dict[str, float]]:
+) -> BeamConfig:
     """
     Performs relevant matchings to improve the rigid waist shift at the provided *ip* for beam 1,
     and returns the corresponding configuration for beam the provided *beam* (twiss table, triplet
@@ -278,4 +299,9 @@ def get_matched_waist_shift_config(
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
     working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=beam)
-    return twiss_df, triplets_knobs, quads_knobs, working_point_knobs
+    return BeamConfig(
+        twiss_tfs=twiss_df,
+        triplets_knobs=triplets_knobs,
+        quads_knobs=quads_knobs,
+        working_point_knobs=working_point_knobs,
+    )
