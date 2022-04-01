@@ -232,7 +232,7 @@ def create_knobs(
             nominal_b2_fields = lhc.get_magnets_powering(madxb2, patterns=affected_b2_elements)
 
     # ----- Beam 2 Waist Shift ----- #
-    logger.info("Preparing beam 1 waist shift configuration")
+    logger.info("Preparing beam 2 waist shift configuration")
     waist_b2_in = b2_dirs["main"] / "waist_b2.madx"
     waist_b2_out = b2_dirs["main"] / "waist_b2.out"
     with waist_b2_in.open("w") as commands, waist_b2_out.open("w") as outputs:
