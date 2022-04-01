@@ -75,6 +75,8 @@ def get_nominal_beam_config(madx: Madx, energy: float, beam: int, ip: int, qx: f
     _ = orbit.setup_lhc_orbit(madx, scheme="flat")
     madx.command.use(sequence=f"lhcb{beam:d}")
 
+    matching.match_tunes(madx, "lhc", f"lhcb{beam:d}", qx, qy, calls=200)
+    matching.match_chromaticities(madx, "lhc", f"lhcb{beam:d}", 2.0, 2.0, calls=200)
     matching.match_tunes_and_chromaticities(madx, "lhc", f"lhcb{beam:d}", qx, qy, 2.0, 2.0, calls=200)
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
@@ -126,7 +128,10 @@ def get_bare_waist_shift_beam1_config(
     _ = get_nominal_beam_config(madx, energy=energy, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 1 at IP{ip}")
     lhc.apply_lhc_rigidity_waist_shift_knob(madx, rigidty_waist_shift_value=rigidty_waist_shift_value, ir=ip)
+    matching.match_tunes(madx, "lhc", "lhcb1", qx, qy, calls=200)
+    matching.match_chromaticities(madx, "lhc", "lhcb1", 2.0, 2.0, calls=200)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb1", qx, qy, 2.0, 2.0, calls=200)
+    logger.debug(f"Managed to rematch B1 to Qx = {madx.table.summ.q1[0]} and Qy = {madx.table.summ.q2[0]}")
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
@@ -178,7 +183,10 @@ def get_bare_waist_shift_beam2_config(
     logger.debug(f"Triplet knobs are: {triplet_knobs}")
     with madx.batch():
         madx.globals.update(triplet_knobs)
+    matching.match_tunes(madx, "lhc", "lhcb2", qx, qy, calls=200)
+    matching.match_chromaticities(madx, "lhc", "lhcb2", 2.0, 2.0, calls=200)
     matching.match_tunes_and_chromaticities(madx, "lhc", "lhcb2", qx, qy, 2.0, 2.0, calls=200)
+    logger.debug(f"Managed to rematch B2 to Qx = {madx.table.summ.q1[0]} and Qy = {madx.table.summ.q2[0]}")
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
@@ -293,7 +301,10 @@ def get_matched_waist_shift_config(
     madx.command.jacobian(calls=25, strategy=3, tolerance=1.0e-21)
     madx.command.endmatch()
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
+    matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
+    matching.match_chromaticities(madx, "lhc", SEQUENCE, 2.0, 2.0, calls=200)
     matching.match_tunes_and_chromaticities(madx, "lhc", SEQUENCE, qx, qy, 2.0, 2.0, calls=200)
+    logger.debug(f"Managed to rematch B{beam:d} to Qx = {madx.table.summ.q1[0]} and Qy = {madx.table.summ.q2[0]}")
 
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
