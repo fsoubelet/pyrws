@@ -330,7 +330,8 @@ def _generate_beam1_figures(
     and take boilerplate away from the main function.
 
     Args:
-        plots_dir (Path): `~pathlib.Path` to the directory to save the B1 figures in.
+        plots_dir (Path): `~pathlib.Path` to the directory to save the B1 figures in. If
+            `None`, the figures are not saved to disk.
         nominal_b1 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the nominal B1 results.
         bare_b1 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the bare waist B1 results.
         matched_b1 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the matched waist B1 results.
@@ -412,7 +413,8 @@ def _generate_beam2_figures(
     being returned to the caller.
 
     Args:
-        plots_dir (Path): `~pathlib.Path` to the directory to save the B2 figures in.
+        plots_dir (Path): `~pathlib.Path` to the directory to save the B2 figures in. If
+            `None`, the figures are not saved to disk.
         nominal_b2 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the nominal B2 results.
         bare_b2 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the bare waist B2 results.
         matched_b2 (tfs.TfsDataFrame): `~tfs.TfsDataFrame` of the matched waist B2 results.
