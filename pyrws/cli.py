@@ -175,13 +175,7 @@ def create_knobs(
 
             logger.info("Refining beam 1 waist shift - this may take a while...")
             b1_matched_waist = get_matched_waist_shift_config(
-                madxb1,
-                beam=1,
-                ip=ip,
-                nominal_twiss=b1_nominal.twiss_tfs,
-                bare_twiss=b1_bare_waist.twiss_tfs,
-                qx=qx,
-                qy=qy,
+                madxb1, beam=1, ip=ip, nominal_twiss=b1_nominal.twiss_tfs, bare_twiss=b1_bare_waist.twiss_tfs, qx=qx, qy=qy
             )
             b1_matched_waist.twiss_tfs = add_betabeating_columns(b1_matched_waist.twiss_tfs, b1_nominal.twiss_tfs)
             matched_b1_fields = lhc.get_magnets_powering(madxb1, patterns=affected_b1_elements)
@@ -191,13 +185,9 @@ def create_knobs(
     tfs.write(b1_dirs["tfs"] / "nominal_b1.tfs", only_export_columns(b1_nominal.twiss_tfs))
     tfs.write(b1_dirs["tfs"] / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(b1_nominal.twiss_tfs)))
     tfs.write(b1_dirs["tfs"] / "bare_waist_b1.tfs", only_export_columns(b1_bare_waist.twiss_tfs))
-    tfs.write(
-        b1_dirs["tfs"] / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_bare_waist.twiss_tfs))
-    )
+    tfs.write(b1_dirs["tfs"] / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_bare_waist.twiss_tfs)))
     tfs.write(b1_dirs["tfs"] / "matched_waist_b1.tfs", only_export_columns(b1_matched_waist.twiss_tfs))
-    tfs.write(
-        b1_dirs["tfs"] / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_matched_waist.twiss_tfs))
-    )
+    tfs.write(b1_dirs["tfs"] / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_matched_waist.twiss_tfs)))
     tfs.write(b1_dirs["tfs"] / "nominal_b1_fields.tfs", nominal_b1_fields)
     tfs.write(b1_dirs["tfs"] / "matched_waist_b1_fields.tfs", matched_b1_fields)
 
@@ -206,14 +196,10 @@ def create_knobs(
     write_knob_powering(b1_dirs["knobs"] / "triplets.madx", b1_matched_waist.triplets_knobs)
     write_knob_powering(b1_dirs["knobs"] / "quadrupoles.madx", b1_matched_waist.quads_knobs)
     write_knob_powering(b1_dirs["knobs"] / "working_point.madx", b1_matched_waist.working_point_knobs)
-    write_knob_delta(
-        b1_dirs["knobs"] / "triplets_change.madx", b1_nominal.triplets_knobs, b1_matched_waist.triplets_knobs
-    )
+    write_knob_delta(b1_dirs["knobs"] / "triplets_change.madx", b1_nominal.triplets_knobs, b1_matched_waist.triplets_knobs)
     write_knob_delta(b1_dirs["knobs"] / "quadrupoles_change.madx", b1_nominal.quads_knobs, b1_matched_waist.quads_knobs)
     write_knob_delta(
-        b1_dirs["knobs"] / "working_point_change.madx",
-        b1_nominal.working_point_knobs,
-        b1_matched_waist.working_point_knobs,
+        b1_dirs["knobs"] / "working_point_change.madx", b1_nominal.working_point_knobs, b1_matched_waist.working_point_knobs
     )
 
     # ----- Beam 2 Nominal ----- #
@@ -249,34 +235,22 @@ def create_knobs(
 
             logger.info("Refining beam 2 waist shift - this may take a while...")
             b2_matched_waist = get_matched_waist_shift_config(
-                madxb2,
-                beam=2,
-                ip=ip,
-                nominal_twiss=b2_nominal.twiss_tfs,
-                bare_twiss=b2_bare_waist.twiss_tfs,
-                qx=qx,
-                qy=qy,
+                madxb2, beam=2, ip=ip, nominal_twiss=b2_nominal.twiss_tfs, bare_twiss=b2_bare_waist.twiss_tfs, qx=qx, qy=qy
             )
             b2_matched_waist.twiss_tfs = add_betabeating_columns(b2_matched_waist.twiss_tfs, b2_nominal.twiss_tfs)
             matched_b2_fields = lhc.get_magnets_powering(madxb2, patterns=affected_b2_elements)
 
     # ----- Quick Sanity check ----- #
-    assert (
-        b1_matched_waist.triplets_knobs == b2_matched_waist.triplets_knobs
-    ), "Triplet knobs are different for B1 and B2!"
+    assert b1_matched_waist.triplets_knobs == b2_matched_waist.triplets_knobs, "Triplet knobs are different for B1 and B2!"
 
     # ----- Beam 2 Output Files ----- #
     logger.info("Writing out TFS files for beam 2")
     tfs.write(b2_dirs["tfs"] / "nominal_b2.tfs", only_export_columns(b2_nominal.twiss_tfs))
     tfs.write(b2_dirs["tfs"] / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(b2_nominal.twiss_tfs)))
     tfs.write(b2_dirs["tfs"] / "bare_waist_b2.tfs", only_export_columns(b2_bare_waist.twiss_tfs))
-    tfs.write(
-        b2_dirs["tfs"] / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_bare_waist.twiss_tfs))
-    )
+    tfs.write(b2_dirs["tfs"] / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_bare_waist.twiss_tfs)))
     tfs.write(b2_dirs["tfs"] / "matched_waist_b2.tfs", only_export_columns(b2_matched_waist.twiss_tfs))
-    tfs.write(
-        b2_dirs["tfs"] / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_matched_waist.twiss_tfs))
-    )
+    tfs.write(b2_dirs["tfs"] / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_matched_waist.twiss_tfs)))
     tfs.write(b2_dirs["tfs"] / "nominal_b2_fields.tfs", nominal_b2_fields)
     tfs.write(b2_dirs["tfs"] / "matched_waist_b2_fields.tfs", matched_b2_fields)
 
@@ -285,14 +259,10 @@ def create_knobs(
     write_knob_powering(b2_dirs["knobs"] / "triplets.madx", b2_matched_waist.triplets_knobs)
     write_knob_powering(b2_dirs["knobs"] / "quadrupoles.madx", b2_matched_waist.quads_knobs)
     write_knob_powering(b2_dirs["knobs"] / "working_point.madx", b2_matched_waist.working_point_knobs)
-    write_knob_delta(
-        b2_dirs["knobs"] / "triplets_change.madx", b2_nominal.triplets_knobs, b2_matched_waist.triplets_knobs
-    )
+    write_knob_delta(b2_dirs["knobs"] / "triplets_change.madx", b2_nominal.triplets_knobs, b2_matched_waist.triplets_knobs)
     write_knob_delta(b2_dirs["knobs"] / "quadrupoles_change.madx", b2_nominal.quads_knobs, b2_matched_waist.quads_knobs)
     write_knob_delta(
-        b2_dirs["knobs"] / "working_point_change.madx",
-        b2_nominal.working_point_knobs,
-        b2_matched_waist.working_point_knobs,
+        b2_dirs["knobs"] / "working_point_change.madx", b2_nominal.working_point_knobs, b2_matched_waist.working_point_knobs
     )
 
     # ----- Generate Plots ----- #

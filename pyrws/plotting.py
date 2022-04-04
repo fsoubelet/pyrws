@@ -96,9 +96,7 @@ def plot_waist_shift_betabeatings_comparison(
     if show_ips:
         _highlight_ips_locations(axis, before)
 
-    ylabel = (
-        r"$\frac{\Delta \beta_x}{\beta_x} \ [\%]$" if column == "BBX" else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
-    )
+    ylabel = r"$\frac{\Delta \beta_x}{\beta_x} \ [\%]$" if column == "BBX" else r"$\frac{\Delta \beta_y}{\beta_y} \ [\%]$"
     axis.set_ylabel(ylabel)
     axis.legend()
 
@@ -188,9 +186,7 @@ def plot_betas_deviation(
             Defaults to `False`.
     """
     assert column in ("BETX", "BETY")
-    logger.debug(
-        "Plotting beta functions deviation from nominal, for bare waist shift and improved waist shift scenarii."
-    )
+    logger.debug("Plotting beta functions deviation from nominal, for bare waist shift and improved waist shift scenarii.")
     axis.plot(
         before.S,
         before[column] - nominal[column],

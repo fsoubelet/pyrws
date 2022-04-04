@@ -41,9 +41,7 @@ def get_triplets_powering_knobs(madx: Madx, ip: int) -> Dict[str, float]:
     return {right_knob: madx.globals[right_knob], left_knob: madx.globals[left_knob]}
 
 
-def get_independent_quadrupoles_powering_knobs(
-    madx: Madx, quad_numbers: Sequence[int], ip: int, beam: int
-) -> Dict[str, float]:
+def get_independent_quadrupoles_powering_knobs(madx: Madx, quad_numbers: Sequence[int], ip: int, beam: int) -> Dict[str, float]:
     """
     Returns the powering knob values for the provided quadrupoles around the given IP.
 
