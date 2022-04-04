@@ -298,7 +298,7 @@ def get_matched_waist_shift_config(
     )
     # We make a knob varying Q4 to Q10 included and we match
     lhc.vary_independent_ir_quadrupoles(madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam)
-    madx.command.jacobian(calls=25, strategy=3, tolerance=1.0e-21)
+    madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)
     madx.command.endmatch()
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
     matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
