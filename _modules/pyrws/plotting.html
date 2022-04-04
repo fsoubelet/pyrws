@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrws.plotting &mdash; pyrws 0.1.0 documentation</title>
+  <title>pyrws.plotting &mdash; pyrws 0.2.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> pyrws
           </a>
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -187,9 +187,7 @@
     <span class="k">if</span> <span class="n">show_ips</span><span class="p">:</span>
         <span class="n">_highlight_ips_locations</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">before</span><span class="p">)</span>
 
-    <span class="n">ylabel</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_x}{\beta_x} \ [\%]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BBX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_y}{\beta_y} \ [\%]$&quot;</span>
-    <span class="p">)</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_x}{\beta_x} \ [\%]$&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;BBX&quot;</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;$\frac{\Delta \beta_y}{\beta_y} \ [\%]$&quot;</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
 
@@ -279,9 +277,7 @@
 <span class="sd">            Defaults to `False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;BETX&quot;</span><span class="p">,</span> <span class="s2">&quot;BETY&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-        <span class="s2">&quot;Plotting beta functions deviation from nominal, for bare waist shift and improved waist shift scenarii.&quot;</span>
-    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Plotting beta functions deviation from nominal, for bare waist shift and improved waist shift scenarii.&quot;</span><span class="p">)</span>
     <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">before</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
         <span class="n">before</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">-</span> <span class="n">nominal</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
