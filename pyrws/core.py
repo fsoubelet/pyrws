@@ -296,6 +296,9 @@ def get_matched_waist_shift_config(
         betx=nominal_twiss.BETX[MATCH_Q11_RIGHT],
         bety=nominal_twiss.BETY[MATCH_Q11_RIGHT],
     )
+    # TODO: maybe we add some constraints for the alpha at Q11 match points with a lower weight (let's say 0.5 to get half of the beta weight)
+    # this may help the matching a little bit
+
     # We make a knob varying Q4 to Q10 included and we match
     lhc.vary_independent_ir_quadrupoles(madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam)
     madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)

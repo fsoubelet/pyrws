@@ -232,17 +232,6 @@ def prepare_output_directories(outputdir: Path) -> Tuple[Dict[str, Path], Dict[s
         {"main": beam2_dir, "tfs": beam2_tfs_dir, "knobs": beam2_knobs_dir, "plots": beam2_plots_dir},
     )
 
-    # return (
-    #     beam1_dir,
-    #     beam1_tfs_dir,
-    #     beam1_knobs_dir,
-    #     beam1_plots_dir,
-    #     beam2_dir,
-    #     beam2_tfs_dir,
-    #     beam2_knobs_dir,
-    #     beam2_plots_dir,
-    # )
-
 
 def write_knob_powering(file_path: Path, knob_dict: Dict[str, float]) -> None:
     """
