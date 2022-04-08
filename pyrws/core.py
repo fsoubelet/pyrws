@@ -68,7 +68,7 @@ def get_nominal_beam_config(madx: Madx, energy: float, beam: int, ip: int, qx: f
         (tunes and chroma).
     """
     assert beam in (1, 2)
-    assert ip in (1, 5)
+    assert ip in (1, 2, 5, 8)
     logger.debug("Setting up nominal beam and matching tunes")
     lhc.re_cycle_sequence(madx, sequence=f"lhcb{beam:d}", start=f"MSIA.EXIT.B{beam:d}")
     lhc.make_lhc_beams(madx, energy=energy, emittance=3.75e-6)
@@ -246,7 +246,7 @@ def get_matched_waist_shift_config(
         (tunes and chroma).
     """
     assert beam in (1, 2)
-    assert ip in (1, 5)
+    assert ip in (1, 2, 5, 8)
     logger.debug("Defining matching points to improve the waist shift")
     MATCH_IP_POINT = f"IP{ip:d}"  # IP marker
     MATCH_Q3_LEFT = f"MQXA.3L{ip:d}"  # Q3 left of provided IP
