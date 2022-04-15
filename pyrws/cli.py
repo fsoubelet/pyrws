@@ -3,7 +3,6 @@
 
 Main command line script.
 """
-from lib2to3.pgen2.token import OP
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -59,17 +58,17 @@ from pyrws.utils import (
 )
 @click.option(
     "--ip",
-    type=click.IntRange(min=0, max=8),
+    type=click.IntRange(min=1, max=8),
     default=1,
     show_default=True,
     required=True,
-    help="Which IP to prepare the waist shift knob for. Should be 1 or 5.",
+    help="Which IP to prepare the waist shift knob for. Should be 1, 2, 5 or 8.",
 )
 @click.option(
     "--waist_shift_setting",
-    type=click.FloatRange(min=0),
+    type=click.FLOAT,
     required=True,
-    help="Unit setting of the rigid waist shift." "A value of 1 corresponds to a 0.5% change in the triplets powering.",
+    help=r"Unit setting of the rigid waist shift. A value of 1 corresponds to a 0.5% change in the triplets powering.",
 )
 @click.option(
     "--outputdir",
