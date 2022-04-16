@@ -8,7 +8,8 @@ Module with functions to perform the rigid waist shift and matching through a
 `~cpymad.madx.Madx` object.
 """
 from dataclasses import dataclass
-from typing import Dict, Tuple
+from pathlib import Path
+from typing import Dict
 
 import tfs
 
@@ -16,6 +17,7 @@ from cpymad.madx import Madx
 from loguru import logger
 
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
+from pyhdtoolkit.utils._misc import fullpath
 from pyrws.constants import VARIED_IR_QUADRUPOLES
 from pyrws.utils import (
     get_independent_quadrupoles_powering_knobs,
@@ -204,13 +206,7 @@ def get_bare_waist_shift_beam2_config(
 
 
 def get_matched_waist_shift_config(
-    madx: Madx,
-    beam: int,
-    ip: int,
-    nominal_twiss: tfs.TfsDataFrame,
-    bare_twiss: tfs.TfsDataFrame,
-    qx: float,
-    qy: float,
+    madx: Madx, beam: int, ip: int, nominal_twiss: tfs.TfsDataFrame, bare_twiss: tfs.TfsDataFrame, qx: float, qy: float
 ) -> BeamConfig:
     """
     Performs relevant matchings to improve the rigid waist shift at the provided *ip* for beam 1,
@@ -309,6 +305,63 @@ def get_matched_waist_shift_config(
     matching.match_tunes_and_chromaticities(madx, "lhc", SEQUENCE, qx, qy, 2.0, 2.0, calls=200)
     logger.debug(f"Managed to rematch B{beam:d} to Qx = {madx.table.summ.q1[0]} and Qy = {madx.table.summ.q2[0]}")
 
+    twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
+    triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
+    quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
+    working_point_knobs = get_tunes_and_chroma_knobs(madx, beam=beam)
+    return BeamConfig(
+        twiss_tfs=twiss_df,
+        triplets_knobs=triplets_knobs,
+        quads_knobs=quads_knobs,
+        working_point_knobs=working_point_knobs,
+    )
+
+
+# ----- Apply a Different Config's Knobs ----- #
+
+
+def get_matched_waist_shift_config(madx: Madx, iterate_dir: Path, beam: int, ip: int, qx: float, qy: float) -> BeamConfig:
+    """
+    Performs relevant matchings to improve the rigid waist shift at the provided *ip* for beam 1,
+    and returns the corresponding configuration for beam the provided *beam* (twiss table, triplet
+    knobs, independent IR quadrupoles knobs).
+
+    .. important::
+        This assumes to whole setups from `~.get_nominal_beam_config` and then
+        `~.get_bare_waist_shift_beam1_config` or `~.get_bare_waist_shift_beam2_config` have been
+        called beforehand (aka the waist shift is applied).
+
+    Args:
+        madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.
+        beam (int): the beam number, should be 1 or 2.
+        iterate_dir (pathlib.Path): the directory of a previous configuration's output, from where the
+            knobs to use will be looked for.
+        ip (int): the IP at which to apply the rigid waist shift.
+        qx (float): the horizontal tune to re-match to after applying the rigid
+            waist shift.
+        qy (float): the vertical tune to re-match to after applying the rigit
+            waist shift.
+
+    Returns:
+        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
+        and values of the triplets powering knobs, a `dict` with the names and values of the independent
+        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
+        (tunes and chroma).
+    """
+    # The waist shift is already applied when calling this function and there will be a rematching of the
+    # working point later on so the only knobsfile called from the previous configuration is the independent
+    # quadrupoles powering.
+    previous_conf_quads_knob_file: Path = iterate_dir / f"BEAM{beam:d}" / "KNOBS" / "quadrupoles.madx"
+    logger.debug(f"Applying the knobs from '{previous_conf_quads_knob_file}' on this configuration")
+    madx.call(fullpath(previous_conf_quads_knob_file))
+
+    # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
+    matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
+    matching.match_chromaticities(madx, "lhc", SEQUENCE, 2.0, 2.0, calls=200)
+    matching.match_tunes_and_chromaticities(madx, "lhc", SEQUENCE, qx, qy, 2.0, 2.0, calls=200)
+    logger.debug(f"Managed to rematch B{beam:d} to Qx = {madx.table.summ.q1[0]} and Qy = {madx.table.summ.q2[0]}")
+
+    # Query and return all the relevant knobs
     twiss_df = twiss.get_twiss_tfs(madx, chrom=True)
     triplets_knobs = get_triplets_powering_knobs(madx, ip=ip)
     quads_knobs = get_independent_quadrupoles_powering_knobs(madx, quad_numbers=VARIED_IR_QUADRUPOLES, ip=ip, beam=beam)
