@@ -182,7 +182,7 @@ def get_bare_waist_shift_beam2_config(
         point knobs (tunes and chroma).
     """
     _ = get_nominal_beam_config(madx, energy=energy, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
-    logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
+    logger.info(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
     logger.debug(f"Triplet knobs are: {triplet_knobs}")
     with madx.batch():
         madx.globals.update(triplet_knobs)
