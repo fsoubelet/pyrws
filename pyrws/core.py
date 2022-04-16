@@ -13,6 +13,7 @@ from typing import Dict
 
 import tfs
 
+from cpymad._rpc import RemoteProcessClosed, RemoteProcessCrashed
 from cpymad.madx import Madx
 from loguru import logger
 
@@ -298,9 +299,13 @@ def get_matched_waist_shift_config(
 
     # We make a knob varying Q4 to Q10 included and we match
     lhc.vary_independent_ir_quadrupoles(madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam)
-    with timeit(lambda spanned: logger.debug(f"Rematched the waist shift in {spanned} seconds")):
-        madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)
-        madx.command.endmatch()
+    try:
+        with timeit(lambda spanned: logger.debug(f"Rematched the waist shift in {spanned} seconds")):
+            madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)
+            madx.command.endmatch()
+    except (RemoteProcessClosed, RemoteProcessCrashed) as jacobian_match_crash:
+        logger.exception("A crash occured in MAD-X when trying to rematch the waist shift")
+        print(jacobian_match_crash)
 
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
     matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
