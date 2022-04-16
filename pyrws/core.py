@@ -64,10 +64,10 @@ def get_nominal_beam_config(madx: Madx, energy: float, beam: int, ip: int, qx: f
         qy (float): the vertical tune to match to.
 
     Returns:
-        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs, a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
-        (tunes and chroma).
+        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
+        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
+        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
+        names and values of the working point knobs (tunes and chroma).
     """
     assert beam in (1, 2)
     assert ip in (1, 2, 5, 8)
@@ -122,10 +122,10 @@ def get_bare_waist_shift_beam1_config(
             waist shift.
 
     Returns:
-        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs, a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
-        (tunes and chroma).
+        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
+        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
+        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
+        names and values of the working point knobs (tunes and chroma).
     """
     _ = get_nominal_beam_config(madx, energy=energy, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 1 at IP{ip}")
@@ -175,10 +175,10 @@ def get_bare_waist_shift_beam2_config(
             waist shift.
 
     Returns:
-        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs, a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
-        (tunes and chroma).
+        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
+        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
+        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
+        names and values of the working point knobs (tunes and chroma).
     """
     _ = get_nominal_beam_config(madx, energy=energy, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
@@ -236,10 +236,10 @@ def get_matched_waist_shift_config(
             waist shift.
 
     Returns:
-        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs, a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
-        (tunes and chroma).
+        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
+        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
+        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
+        names and values of the working point knobs (tunes and chroma).
     """
     assert beam in (1, 2)
     assert ip in (1, 2, 5, 8)
@@ -320,7 +320,9 @@ def get_matched_waist_shift_config(
 # ----- Apply a Different Config's Knobs ----- #
 
 
-def get_matched_waist_shift_config(madx: Madx, iterate_dir: Path, beam: int, ip: int, qx: float, qy: float) -> BeamConfig:
+def get_waist_shift_config_from_applied_existing_knobs(
+    madx: Madx, use_knobs_from: Path, beam: int, ip: int, qx: float, qy: float
+) -> BeamConfig:
     """
     Performs relevant matchings to improve the rigid waist shift at the provided *ip* for beam 1,
     and returns the corresponding configuration for beam the provided *beam* (twiss table, triplet
@@ -334,7 +336,7 @@ def get_matched_waist_shift_config(madx: Madx, iterate_dir: Path, beam: int, ip:
     Args:
         madx (cpymad.madx.Madx): an instanciated `~cpymad.madx.Madx` object.
         beam (int): the beam number, should be 1 or 2.
-        iterate_dir (pathlib.Path): the directory of a previous configuration's output, from where the
+        use_knobs_from (pathlib.Path): the directory of a previous configuration's output, from where the
             knobs to use will be looked for.
         ip (int): the IP at which to apply the rigid waist shift.
         qx (float): the horizontal tune to re-match to after applying the rigid
@@ -343,15 +345,15 @@ def get_matched_waist_shift_config(madx: Madx, iterate_dir: Path, beam: int, ip:
             waist shift.
 
     Returns:
-        In this order, the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`, a `dict` with the names
-        and values of the triplets powering knobs, a `dict` with the names and values of the independent
-        IR quadrupoles powering knobs and a `dict` with the names and values of the working point knobs
-        (tunes and chroma).
+        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
+        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
+        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
+        names and values of the working point knobs (tunes and chroma).
     """
     # The waist shift is already applied when calling this function and there will be a rematching of the
     # working point later on so the only knobsfile called from the previous configuration is the independent
     # quadrupoles powering.
-    previous_conf_quads_knob_file: Path = iterate_dir / f"BEAM{beam:d}" / "KNOBS" / "quadrupoles.madx"
+    previous_conf_quads_knob_file: Path = use_knobs_from / f"BEAM{beam:d}" / "KNOBS" / "quadrupoles.madx"
     logger.debug(f"Applying the knobs from '{previous_conf_quads_knob_file}' on this configuration")
     madx.call(fullpath(previous_conf_quads_knob_file))
 
