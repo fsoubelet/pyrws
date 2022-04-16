@@ -42,7 +42,7 @@ from pyrws.utils import (
 )
 
 
-@click.command(context_settings=dict(max_content_width=105))
+@click.command(context_settings=dict(max_content_width=120))
 # ----- Required Arguments ----- #
 @click.option(
     "--sequence",
@@ -78,6 +78,15 @@ from pyrws.utils import (
     help="Directory in which to write output files. Defaults to 'outputs/' in the current working directory.",
 )
 # ----- Optional Arguments ----- #
+@click.option(
+    "--use_knobs_from",
+    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True, path_type=Path),
+    default=None,
+    show_default=True,
+    help="If provided, should point to the output directory of a previous run of this script. The matching quadrupole "
+    "knobs will then be retrieved from their expected location in this directory and used for this run, instead of "
+    "attempting a rematching of the waist shift knob (which can sometimes fail at very low betastar configurations).",
+)
 @click.option("--energy", type=click.FloatRange(min=0), default=6800, show_default=True, help="Beam energy in [GeV]")
 @click.option(
     "--qx",
@@ -126,6 +135,7 @@ def create_knobs(
     ip: int,
     waist_shift_setting: float,
     outputdir: Path,
+    use_knobs_from: Path,
     energy: Optional[float],
     qx: Optional[float],
     qy: Optional[float],
