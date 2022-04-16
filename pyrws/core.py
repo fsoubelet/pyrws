@@ -18,6 +18,7 @@ from loguru import logger
 
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 from pyhdtoolkit.utils._misc import fullpath
+from pyhdtoolkit.utils.contexts import timeit
 from pyrws.constants import VARIED_IR_QUADRUPOLES
 from pyrws.utils import (
     get_independent_quadrupoles_powering_knobs,
@@ -297,8 +298,10 @@ def get_matched_waist_shift_config(
 
     # We make a knob varying Q4 to Q10 included and we match
     lhc.vary_independent_ir_quadrupoles(madx, quad_numbers=VARIED_IR_QUADRUPOLES, sides=("R", "L"), ip=ip, beam=beam)
-    madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)
-    madx.command.endmatch()
+    with timeit(lambda spanned: logger.debug(f"Rematched the waist shift in {spanned} seconds")):
+        madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)
+        madx.command.endmatch()
+
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
     matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
     matching.match_chromaticities(madx, "lhc", SEQUENCE, 2.0, 2.0, calls=200)
