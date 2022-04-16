@@ -356,9 +356,9 @@ def get_matched_waist_shift_config(madx: Madx, iterate_dir: Path, beam: int, ip:
     madx.call(fullpath(previous_conf_quads_knob_file))
 
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
-    matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
-    matching.match_chromaticities(madx, "lhc", SEQUENCE, 2.0, 2.0, calls=200)
-    matching.match_tunes_and_chromaticities(madx, "lhc", SEQUENCE, qx, qy, 2.0, 2.0, calls=200)
+    matching.match_tunes(madx, "lhc", f"lhcb{beam:d}", qx, qy, calls=200)
+    matching.match_chromaticities(madx, "lhc", f"lhcb{beam:d}", 2.0, 2.0, calls=200)
+    matching.match_tunes_and_chromaticities(madx, "lhc", f"lhcb{beam:d}", qx, qy, 2.0, 2.0, calls=200)
     logger.debug(f"Managed to rematch B{beam:d} to Qx = {madx.table.summ.q1[0]} and Qy = {madx.table.summ.q2[0]}")
 
     # Query and return all the relevant knobs
