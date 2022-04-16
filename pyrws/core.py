@@ -65,10 +65,10 @@ def get_nominal_beam_config(madx: Madx, energy: float, beam: int, ip: int, qx: f
         qy (float): the vertical tune to match to.
 
     Returns:
-        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
-        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
-        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
-        names and values of the working point knobs (tunes and chroma).
+        A custom `~.BeamConfig` object containing: the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`,
+        a `dict` with the names and values of the triplets powering knobs, a `dict` with the names and values
+        of the independent IR quadrupoles powering knobs and a `dict` with the names and values of the working
+        point knobs (tunes and chroma).
     """
     assert beam in (1, 2)
     assert ip in (1, 2, 5, 8)
@@ -123,10 +123,10 @@ def get_bare_waist_shift_beam1_config(
             waist shift.
 
     Returns:
-        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
-        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
-        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
-        names and values of the working point knobs (tunes and chroma).
+        A custom `~.BeamConfig` object containing: the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`,
+        a `dict` with the names and values of the triplets powering knobs, a `dict` with the names and values
+        of the independent IR quadrupoles powering knobs and a `dict` with the names and values of the working
+        point knobs (tunes and chroma).
     """
     _ = get_nominal_beam_config(madx, energy=energy, beam=1, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 1 at IP{ip}")
@@ -176,10 +176,10 @@ def get_bare_waist_shift_beam2_config(
             waist shift.
 
     Returns:
-        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
-        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
-        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
-        names and values of the working point knobs (tunes and chroma).
+        A custom `~.BeamConfig` object containing: the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`,
+        a `dict` with the names and values of the triplets powering knobs, a `dict` with the names and values
+        of the independent IR quadrupoles powering knobs and a `dict` with the names and values of the working
+        point knobs (tunes and chroma).
     """
     _ = get_nominal_beam_config(madx, energy=energy, beam=2, ip=ip, qx=qx - 0.04, qy=qy + 0.04)
     logger.debug(f"Applying rigidity waist shift to beam 2 at IP{ip}, as determined by the beam 1 triplet knobs")
@@ -237,10 +237,10 @@ def get_matched_waist_shift_config(
             waist shift.
 
     Returns:
-        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
-        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
-        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
-        names and values of the working point knobs (tunes and chroma).
+        A custom `~.BeamConfig` object containing: the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`,
+        a `dict` with the names and values of the triplets powering knobs, a `dict` with the names and values
+        of the independent IR quadrupoles powering knobs and a `dict` with the names and values of the working
+        point knobs (tunes and chroma).
     """
     assert beam in (1, 2)
     assert ip in (1, 2, 5, 8)
@@ -348,10 +348,10 @@ def get_waist_shift_config_from_applied_existing_knobs(
             waist shift.
 
     Returns:
-        A custom, data-validated `~.BeamConfig` object containing: the result of a ``TWISS`` call as a
-        `~tfs.TfsDataFrame`, a `dict` with the names and values of the triplets powering knobs, a `dict`
-        with the names and values of the independent IR quadrupoles powering knobs and a `dict` with the
-        names and values of the working point knobs (tunes and chroma).
+        A custom `~.BeamConfig` object containing: the result of a ``TWISS`` call as a `~tfs.TfsDataFrame`,
+        a `dict` with the names and values of the triplets powering knobs, a `dict` with the names and values
+        of the independent IR quadrupoles powering knobs and a `dict` with the names and values of the working
+        point knobs (tunes and chroma).
     """
     # The waist shift is already applied when calling this function and there will be a rematching of the
     # working point later on so the only knobsfile called from the previous configuration is the independent
