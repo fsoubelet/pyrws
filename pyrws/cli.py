@@ -199,7 +199,7 @@ def create_knobs(
             matched_b1_fields = lhc.get_magnets_powering(madxb1, patterns=affected_b1_elements)
 
     # ----- Beam 1 Output Files ----- #
-    with timeit(lambda spanned: logger.info(f"Wrote out B1 TFS files to disk in {spanned} seconds")):
+    with timeit(lambda spanned: logger.info(f"Wrote out B1 TFS files to disk in {spanned:.2f} seconds")):
         tfs.write(b1_dirs["tfs"] / "nominal_b1.tfs", only_export_columns(b1_nominal.twiss_tfs))
         tfs.write(b1_dirs["tfs"] / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(b1_nominal.twiss_tfs)))
         tfs.write(b1_dirs["tfs"] / "bare_waist_b1.tfs", only_export_columns(b1_bare_waist.twiss_tfs))
@@ -212,7 +212,7 @@ def create_knobs(
         tfs.write(b1_dirs["tfs"] / "matched_waist_b1_fields.tfs", matched_b1_fields)
 
     # ----- Write B1 Knobs ----- #
-    with timeit(lambda spanned: logger.info(f"Wrote out B1 knob powerings and deltas to disk in {spanned} seconds")):
+    with timeit(lambda spanned: logger.info(f"Wrote out B1 knob powerings and deltas to disk in {spanned:.2f} seconds")):
         write_knob_powering(b1_dirs["knobs"] / "triplets.madx", b1_matched_waist.triplets_knobs)
         write_knob_powering(b1_dirs["knobs"] / "quadrupoles.madx", b1_matched_waist.quads_knobs)
         write_knob_powering(b1_dirs["knobs"] / "working_point.madx", b1_matched_waist.working_point_knobs)
@@ -272,7 +272,7 @@ def create_knobs(
     assert b1_matched_waist.triplets_knobs == b2_matched_waist.triplets_knobs, "Triplet knobs are different for B1 and B2!"
 
     # ----- Beam 2 Output Files ----- #
-    with timeit(lambda spanned: logger.info(f"Wrote out B2 TFS files to disk in {spanned} seconds")):
+    with timeit(lambda spanned: logger.info(f"Wrote out B2 TFS files to disk in {spanned:.2f} seconds")):
         tfs.write(b2_dirs["tfs"] / "nominal_b2.tfs", only_export_columns(b2_nominal.twiss_tfs))
         tfs.write(b2_dirs["tfs"] / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(b2_nominal.twiss_tfs)))
         tfs.write(b2_dirs["tfs"] / "bare_waist_b2.tfs", only_export_columns(b2_bare_waist.twiss_tfs))
@@ -285,7 +285,7 @@ def create_knobs(
         tfs.write(b2_dirs["tfs"] / "matched_waist_b2_fields.tfs", matched_b2_fields)
 
     # ----- Write B2 Knobs ----- #
-    with timeit(lambda spanned: logger.info(f"Wrote out B2 knob powerings and deltas to disk in {spanned} seconds")):
+    with timeit(lambda spanned: logger.info(f"Wrote out B2 knob powerings and deltas to disk in {spanned:.2f} seconds")):
         write_knob_powering(b2_dirs["knobs"] / "triplets.madx", b2_matched_waist.triplets_knobs)
         write_knob_powering(b2_dirs["knobs"] / "quadrupoles.madx", b2_matched_waist.quads_knobs)
         write_knob_powering(b2_dirs["knobs"] / "working_point.madx", b2_matched_waist.working_point_knobs)
