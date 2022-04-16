@@ -16,6 +16,7 @@ from matplotlib import pyplot as plt
 
 from pyhdtoolkit.cpymadtools import lhc
 from pyhdtoolkit.utils._misc import fullpath
+from pyhdtoolkit.utils.contexts import timeit
 from pyhdtoolkit.utils.defaults import config_logger
 from pyrws.constants import AFFECTED_ELEMENTS
 from pyrws.core import (
@@ -23,6 +24,7 @@ from pyrws.core import (
     get_bare_waist_shift_beam2_config,
     get_matched_waist_shift_config,
     get_nominal_beam_config,
+    get_waist_shift_config_from_applied_existing_knobs,
 )
 from pyrws.plotting import (
     plot_betas_comparison,
@@ -182,34 +184,43 @@ def create_knobs(
             )
             b1_bare_waist.twiss_tfs = add_betabeating_columns(b1_bare_waist.twiss_tfs, b1_nominal.twiss_tfs)
 
-            logger.info("Refining beam 1 waist shift - this may take a while...")
-            b1_matched_waist = get_matched_waist_shift_config(
-                madxb1, beam=1, ip=ip, nominal_twiss=b1_nominal.twiss_tfs, bare_twiss=b1_bare_waist.twiss_tfs, qx=qx, qy=qy
-            )
+            if use_knobs_from is not None:
+                logger.info("Using knobs from a provided previous run")
+                b1_matched_waist = get_waist_shift_config_from_applied_existing_knobs(
+                    madxb1, use_knobs_from=use_knobs_from, beam=1, ip=ip, qx=qx, qy=qy
+                )
+
+            else:
+                logger.info("Refining beam 1 waist shift - this may take a while...")
+                b1_matched_waist = get_matched_waist_shift_config(
+                    madxb1, beam=1, ip=ip, nominal_twiss=b1_nominal.twiss_tfs, bare_twiss=b1_bare_waist.twiss_tfs, qx=qx, qy=qy
+                )
             b1_matched_waist.twiss_tfs = add_betabeating_columns(b1_matched_waist.twiss_tfs, b1_nominal.twiss_tfs)
             matched_b1_fields = lhc.get_magnets_powering(madxb1, patterns=affected_b1_elements)
 
     # ----- Beam 1 Output Files ----- #
-    logger.info("Writing out TFS files for beam 1")
-    tfs.write(b1_dirs["tfs"] / "nominal_b1.tfs", only_export_columns(b1_nominal.twiss_tfs))
-    tfs.write(b1_dirs["tfs"] / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(b1_nominal.twiss_tfs)))
-    tfs.write(b1_dirs["tfs"] / "bare_waist_b1.tfs", only_export_columns(b1_bare_waist.twiss_tfs))
-    tfs.write(b1_dirs["tfs"] / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_bare_waist.twiss_tfs)))
-    tfs.write(b1_dirs["tfs"] / "matched_waist_b1.tfs", only_export_columns(b1_matched_waist.twiss_tfs))
-    tfs.write(b1_dirs["tfs"] / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_matched_waist.twiss_tfs)))
-    tfs.write(b1_dirs["tfs"] / "nominal_b1_fields.tfs", nominal_b1_fields)
-    tfs.write(b1_dirs["tfs"] / "matched_waist_b1_fields.tfs", matched_b1_fields)
+    with timeit(lambda spanned: logger.info(f"Wrote out B1 TFS files to disk in {spanned} seconds")):
+        tfs.write(b1_dirs["tfs"] / "nominal_b1.tfs", only_export_columns(b1_nominal.twiss_tfs))
+        tfs.write(b1_dirs["tfs"] / "nominal_b1_monitors.tfs", only_monitors(only_export_columns(b1_nominal.twiss_tfs)))
+        tfs.write(b1_dirs["tfs"] / "bare_waist_b1.tfs", only_export_columns(b1_bare_waist.twiss_tfs))
+        tfs.write(b1_dirs["tfs"] / "bare_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_bare_waist.twiss_tfs)))
+        tfs.write(b1_dirs["tfs"] / "matched_waist_b1.tfs", only_export_columns(b1_matched_waist.twiss_tfs))
+        tfs.write(
+            b1_dirs["tfs"] / "matched_waist_b1_monitors.tfs", only_monitors(only_export_columns(b1_matched_waist.twiss_tfs))
+        )
+        tfs.write(b1_dirs["tfs"] / "nominal_b1_fields.tfs", nominal_b1_fields)
+        tfs.write(b1_dirs["tfs"] / "matched_waist_b1_fields.tfs", matched_b1_fields)
 
     # ----- Write B1 Knobs ----- #
-    logger.info("Writing B1 knob powerings and deltas to disk")
-    write_knob_powering(b1_dirs["knobs"] / "triplets.madx", b1_matched_waist.triplets_knobs)
-    write_knob_powering(b1_dirs["knobs"] / "quadrupoles.madx", b1_matched_waist.quads_knobs)
-    write_knob_powering(b1_dirs["knobs"] / "working_point.madx", b1_matched_waist.working_point_knobs)
-    write_knob_delta(b1_dirs["knobs"] / "triplets_change.madx", b1_nominal.triplets_knobs, b1_matched_waist.triplets_knobs)
-    write_knob_delta(b1_dirs["knobs"] / "quadrupoles_change.madx", b1_nominal.quads_knobs, b1_matched_waist.quads_knobs)
-    write_knob_delta(
-        b1_dirs["knobs"] / "working_point_change.madx", b1_nominal.working_point_knobs, b1_matched_waist.working_point_knobs
-    )
+    with timeit(lambda spanned: logger.info(f"Wrote out B1 knob powerings and deltas to disk in {spanned} seconds")):
+        write_knob_powering(b1_dirs["knobs"] / "triplets.madx", b1_matched_waist.triplets_knobs)
+        write_knob_powering(b1_dirs["knobs"] / "quadrupoles.madx", b1_matched_waist.quads_knobs)
+        write_knob_powering(b1_dirs["knobs"] / "working_point.madx", b1_matched_waist.working_point_knobs)
+        write_knob_delta(b1_dirs["knobs"] / "triplets_change.madx", b1_nominal.triplets_knobs, b1_matched_waist.triplets_knobs)
+        write_knob_delta(b1_dirs["knobs"] / "quadrupoles_change.madx", b1_nominal.quads_knobs, b1_matched_waist.quads_knobs)
+        write_knob_delta(
+            b1_dirs["knobs"] / "working_point_change.madx", b1_nominal.working_point_knobs, b1_matched_waist.working_point_knobs
+        )
 
     # ----- Beam 2 Nominal ----- #
     logger.info("Preparing beam 2 nominal configuration")
@@ -242,10 +253,18 @@ def create_knobs(
             )
             b2_bare_waist.twiss_tfs = add_betabeating_columns(b2_bare_waist.twiss_tfs, b2_nominal.twiss_tfs)
 
-            logger.info("Refining beam 2 waist shift - this may take a while...")
-            b2_matched_waist = get_matched_waist_shift_config(
-                madxb2, beam=2, ip=ip, nominal_twiss=b2_nominal.twiss_tfs, bare_twiss=b2_bare_waist.twiss_tfs, qx=qx, qy=qy
-            )
+            if use_knobs_from is not None:
+                logger.info("Using knobs from a provided previous run")
+                b1_matched_waist = get_waist_shift_config_from_applied_existing_knobs(
+                    madxb2, use_knobs_from=use_knobs_from, beam=2, ip=ip, qx=qx, qy=qy
+                )
+
+            else:
+                logger.info("Refining beam 2 waist shift - this may take a while...")
+                b2_matched_waist = get_matched_waist_shift_config(
+                    madxb2, beam=2, ip=ip, nominal_twiss=b2_nominal.twiss_tfs, bare_twiss=b2_bare_waist.twiss_tfs, qx=qx, qy=qy
+                )
+
             b2_matched_waist.twiss_tfs = add_betabeating_columns(b2_matched_waist.twiss_tfs, b2_nominal.twiss_tfs)
             matched_b2_fields = lhc.get_magnets_powering(madxb2, patterns=affected_b2_elements)
 
@@ -253,29 +272,31 @@ def create_knobs(
     assert b1_matched_waist.triplets_knobs == b2_matched_waist.triplets_knobs, "Triplet knobs are different for B1 and B2!"
 
     # ----- Beam 2 Output Files ----- #
-    logger.info("Writing out TFS files for beam 2")
-    tfs.write(b2_dirs["tfs"] / "nominal_b2.tfs", only_export_columns(b2_nominal.twiss_tfs))
-    tfs.write(b2_dirs["tfs"] / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(b2_nominal.twiss_tfs)))
-    tfs.write(b2_dirs["tfs"] / "bare_waist_b2.tfs", only_export_columns(b2_bare_waist.twiss_tfs))
-    tfs.write(b2_dirs["tfs"] / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_bare_waist.twiss_tfs)))
-    tfs.write(b2_dirs["tfs"] / "matched_waist_b2.tfs", only_export_columns(b2_matched_waist.twiss_tfs))
-    tfs.write(b2_dirs["tfs"] / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_matched_waist.twiss_tfs)))
-    tfs.write(b2_dirs["tfs"] / "nominal_b2_fields.tfs", nominal_b2_fields)
-    tfs.write(b2_dirs["tfs"] / "matched_waist_b2_fields.tfs", matched_b2_fields)
+    with timeit(lambda spanned: logger.info(f"Wrote out B2 TFS files to disk in {spanned} seconds")):
+        tfs.write(b2_dirs["tfs"] / "nominal_b2.tfs", only_export_columns(b2_nominal.twiss_tfs))
+        tfs.write(b2_dirs["tfs"] / "nominal_b2_monitors.tfs", only_monitors(only_export_columns(b2_nominal.twiss_tfs)))
+        tfs.write(b2_dirs["tfs"] / "bare_waist_b2.tfs", only_export_columns(b2_bare_waist.twiss_tfs))
+        tfs.write(b2_dirs["tfs"] / "bare_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_bare_waist.twiss_tfs)))
+        tfs.write(b2_dirs["tfs"] / "matched_waist_b2.tfs", only_export_columns(b2_matched_waist.twiss_tfs))
+        tfs.write(
+            b2_dirs["tfs"] / "matched_waist_b2_monitors.tfs", only_monitors(only_export_columns(b2_matched_waist.twiss_tfs))
+        )
+        tfs.write(b2_dirs["tfs"] / "nominal_b2_fields.tfs", nominal_b2_fields)
+        tfs.write(b2_dirs["tfs"] / "matched_waist_b2_fields.tfs", matched_b2_fields)
 
     # ----- Write B2 Knobs ----- #
-    logger.info("Writing B2 knob powerings and deltas to disk")
-    write_knob_powering(b2_dirs["knobs"] / "triplets.madx", b2_matched_waist.triplets_knobs)
-    write_knob_powering(b2_dirs["knobs"] / "quadrupoles.madx", b2_matched_waist.quads_knobs)
-    write_knob_powering(b2_dirs["knobs"] / "working_point.madx", b2_matched_waist.working_point_knobs)
-    write_knob_delta(b2_dirs["knobs"] / "triplets_change.madx", b2_nominal.triplets_knobs, b2_matched_waist.triplets_knobs)
-    write_knob_delta(b2_dirs["knobs"] / "quadrupoles_change.madx", b2_nominal.quads_knobs, b2_matched_waist.quads_knobs)
-    write_knob_delta(
-        b2_dirs["knobs"] / "working_point_change.madx", b2_nominal.working_point_knobs, b2_matched_waist.working_point_knobs
-    )
+    with timeit(lambda spanned: logger.info(f"Wrote out B2 knob powerings and deltas to disk in {spanned} seconds")):
+        write_knob_powering(b2_dirs["knobs"] / "triplets.madx", b2_matched_waist.triplets_knobs)
+        write_knob_powering(b2_dirs["knobs"] / "quadrupoles.madx", b2_matched_waist.quads_knobs)
+        write_knob_powering(b2_dirs["knobs"] / "working_point.madx", b2_matched_waist.working_point_knobs)
+        write_knob_delta(b2_dirs["knobs"] / "triplets_change.madx", b2_nominal.triplets_knobs, b2_matched_waist.triplets_knobs)
+        write_knob_delta(b2_dirs["knobs"] / "quadrupoles_change.madx", b2_nominal.quads_knobs, b2_matched_waist.quads_knobs)
+        write_knob_delta(
+            b2_dirs["knobs"] / "working_point_change.madx", b2_nominal.working_point_knobs, b2_matched_waist.working_point_knobs
+        )
 
     # ----- Generate Plots ----- #
-    _ = _generate_beam1_figures(
+    b1_figures = _generate_beam1_figures(
         plots_dir=b1_dirs["plots"],
         nominal_b1=b1_nominal.twiss_tfs,
         bare_b1=b1_bare_waist.twiss_tfs,
@@ -283,7 +304,7 @@ def create_knobs(
         # kwargs
         figsize=figsize,
     )
-    _ = _generate_beam2_figures(
+    b2_figures = _generate_beam2_figures(
         plots_dir=b2_dirs["plots"],
         nominal_b2=b2_nominal.twiss_tfs,
         bare_b2=b2_bare_waist.twiss_tfs,
