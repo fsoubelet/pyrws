@@ -255,7 +255,7 @@ def create_knobs(
 
             if use_knobs_from is not None:
                 logger.info("Using knobs from a provided previous run")
-                b1_matched_waist = get_waist_shift_config_from_applied_existing_knobs(
+                b2_matched_waist = get_waist_shift_config_from_applied_existing_knobs(
                     madxb2, use_knobs_from=use_knobs_from, beam=2, ip=ip, qx=qx, qy=qy
                 )
 
