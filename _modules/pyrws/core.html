@@ -105,8 +105,9 @@
 <span class="kn">import</span> <span class="nn">tfs</span>
 
 <span class="kn">from</span> <span class="nn">cpymad._rpc</span> <span class="kn">import</span> <span class="n">RemoteProcessClosed</span><span class="p">,</span> <span class="n">RemoteProcessCrashed</span>
-<span class="kn">from</span> <span class="nn">cpymad.madx</span> <span class="kn">import</span> <span class="n">Madx</span>
+<span class="kn">from</span> <span class="nn">cpymad.madx</span> <span class="kn">import</span> <span class="n">Madx</span><span class="p">,</span> <span class="n">TwissFailed</span>
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
 
 <span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools</span> <span class="kn">import</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">matching</span><span class="p">,</span> <span class="n">orbit</span><span class="p">,</span> <span class="n">twiss</span>
 <span class="kn">from</span> <span class="nn">pyhdtoolkit.utils._misc</span> <span class="kn">import</span> <span class="n">fullpath</span>
@@ -117,6 +118,8 @@
     <span class="n">get_triplets_powering_knobs</span><span class="p">,</span>
     <span class="n">get_tunes_and_chroma_knobs</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="BeamConfig"><a class="viewcode-back" href="../../modules/index.html#pyrws.core.BeamConfig">[docs]</a><span class="nd">@dataclass</span>
@@ -394,9 +397,9 @@
         <span class="k">with</span> <span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span> <span class="n">spanned</span><span class="p">:</span> <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rematched the waist shift in </span><span class="si">{</span><span class="n">spanned</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)):</span>
             <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">calls</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1.0e-21</span><span class="p">)</span>
             <span class="n">madx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">endmatch</span><span class="p">()</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">RemoteProcessClosed</span><span class="p">,</span> <span class="n">RemoteProcessCrashed</span><span class="p">)</span> <span class="k">as</span> <span class="n">jacobian_match_crash</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;A crash occured in MAD-X when trying to rematch the waist shift&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">jacobian_match_crash</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">RemoteProcessClosed</span><span class="p">,</span> <span class="n">RemoteProcessCrashed</span><span class="p">,</span> <span class="n">TwissFailed</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;A crash occured in MAD-X when trying to rematch the waist shift&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print_exception</span><span class="p">()</span>
 
     <span class="c1"># Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift</span>
     <span class="n">matching</span><span class="o">.</span><span class="n">match_tunes</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="s2">&quot;lhc&quot;</span><span class="p">,</span> <span class="n">SEQUENCE</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">calls</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
