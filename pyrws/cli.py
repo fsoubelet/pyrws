@@ -13,6 +13,7 @@ import tfs
 from cpymad.madx import Madx
 from loguru import logger
 from matplotlib import pyplot as plt
+from rich.traceback import install as install_traceback
 
 from pyhdtoolkit.cpymadtools import lhc
 from pyhdtoolkit.utils._misc import fullpath
@@ -42,6 +43,8 @@ from pyrws.utils import (
     write_knob_delta,
     write_knob_powering,
 )
+
+install_traceback(width=130, suppress=[click])  # Rich handling of uncaught exceptions for the tracebacks
 
 
 @click.command(context_settings=dict(max_content_width=120))

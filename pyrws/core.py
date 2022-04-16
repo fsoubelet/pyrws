@@ -14,8 +14,9 @@ from typing import Dict
 import tfs
 
 from cpymad._rpc import RemoteProcessClosed, RemoteProcessCrashed
-from cpymad.madx import Madx
+from cpymad.madx import Madx, TwissFailed
 from loguru import logger
+from rich.console import Console
 
 from pyhdtoolkit.cpymadtools import lhc, matching, orbit, twiss
 from pyhdtoolkit.utils._misc import fullpath
@@ -26,6 +27,8 @@ from pyrws.utils import (
     get_triplets_powering_knobs,
     get_tunes_and_chroma_knobs,
 )
+
+console = Console()
 
 
 @dataclass
@@ -303,9 +306,9 @@ def get_matched_waist_shift_config(
         with timeit(lambda spanned: logger.debug(f"Rematched the waist shift in {spanned} seconds")):
             madx.command.jacobian(calls=25, strategy=1, tolerance=1.0e-21)
             madx.command.endmatch()
-    except (RemoteProcessClosed, RemoteProcessCrashed) as jacobian_match_crash:
-        logger.exception("A crash occured in MAD-X when trying to rematch the waist shift")
-        print(jacobian_match_crash)
+    except (RemoteProcessClosed, RemoteProcessCrashed, TwissFailed):
+        logger.error("A crash occured in MAD-X when trying to rematch the waist shift")
+        console.print_exception()
 
     # Sanity check: use MQTs (minimal beta-beating impact) to get back to working point in case of drift
     matching.match_tunes(madx, "lhc", SEQUENCE, qx, qy, calls=200)
