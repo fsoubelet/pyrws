@@ -60,6 +60,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#module-pyrws.constants">PYRWS Modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#useful-constants">Useful Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checkers-functionality">Checkers Functionality</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#core-functionality">Core Functionality</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#plotting-functions">Plotting Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
@@ -222,6 +223,37 @@
 <section id="useful-constants">
 <span id="constants"></span><h2>Useful Constants<a class="headerlink" href="#useful-constants" title="Permalink to this headline"></a></h2>
 <p>Specific constants to be used in the package, to help with consistency.</p>
+</section>
+<span class="target" id="module-pyrws.checks"></span><section id="checkers-functionality">
+<span id="checks"></span><h2>Checkers Functionality<a class="headerlink" href="#checkers-functionality" title="Permalink to this headline"></a></h2>
+<p>Module with functions to perform checks after having created a
+rigid waist shift knob for a given optics configuration.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrws.checks.style_fields_changes">
+<span class="sig-prename descclassname"><span class="pre">pyrws.checks.</span></span><span class="sig-name descname"><span class="pre">style_fields_changes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nominal_fields_dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.4.2)"><span class="pre">pandas.core.frame.DataFrame</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">matched_fields_dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.4.2)"><span class="pre">pandas.core.frame.DataFrame</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyrws/checks.html#style_fields_changes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrws.checks.style_fields_changes" title="Permalink to this definition"></a></dt>
+<dd><p>Return a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.html#pandas.io.formats.style.Styler" title="(in pandas v1.4.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Styler</span></code></a> object from the nominal and matched
+fields dataframes, to easily display the change of powering for relevant magnets.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The provided dataframes should hold columns with checks of the reach of limits
+powering, namely the <code class="docutils literal notranslate"><span class="pre">percent</span></code> column is used in this function. This is a regular
+output of the knob creation of this package.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrws.checks.style_fields_dataframe">
+<span class="sig-prename descclassname"><span class="pre">pyrws.checks.</span></span><span class="sig-name descname"><span class="pre">style_fields_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.4.2)"><span class="pre">pandas.core.frame.DataFrame</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyrws/checks.html#style_fields_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrws.checks.style_fields_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Return a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.html#pandas.io.formats.style.Styler" title="(in pandas v1.4.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Styler</span></code></a> object from the nominal or matched
+provided fields <em>dataframe</em>, to easily display the reach of limits.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The provided <em>dataframe</em> should hold columns with checks of the reach of limits
+powering, namely <code class="docutils literal notranslate"><span class="pre">imax</span></code>, <code class="docutils literal notranslate"><span class="pre">ampere</span></code> and <code class="docutils literal notranslate"><span class="pre">percent</span></code>. This is a regular
+output of the knob creation of this package.</p>
+</div>
+</dd></dl>
+
 </section>
 <span class="target" id="module-pyrws.core"></span><section id="core-functionality">
 <span id="core"></span><h2>Core Functionality<a class="headerlink" href="#core-functionality" title="Permalink to this headline"></a></h2>

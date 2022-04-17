@@ -15,6 +15,9 @@ PYRWS Modules
 .. automodule:: pyrws.constants
     :members:
 
+.. automodule:: pyrws.checks
+    :members:
+
 .. automodule:: pyrws.core
     :members:
 
