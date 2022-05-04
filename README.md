@@ -3,7 +3,9 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/fsoubelet/pyrws.svg?style=popout)](https://github.com/fsoubelet/pyrws/)
 [![PyPI Version](https://img.shields.io/pypi/v/pyrws?label=PyPI&logo=pypi)](https://pypi.org/project/pyrws/)
 [![GitHub release](https://img.shields.io/github/v/release/fsoubelet/pyrws?logo=github)](https://github.com/fsoubelet/pyrws/)
-<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5070986.svg)](https://doi.org/10.5281/zenodo.5070986) -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6517667.svg)](https://doi.org/10.5281/zenodo.6517667)
+
+
 
 This is a `Python 3.8+` package that provides functionality to create Rigid Waist Shift Knobs to be used for for IR local coupling correction in the LHC commissioning 2022.
 A bit more information can be found on the OMC website's page for [the procedure](https://pylhc.github.io/measurements/procedures/rigid_waist_shift/).
