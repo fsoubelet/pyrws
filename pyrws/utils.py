@@ -272,3 +272,24 @@ def load_knobs_file(filepath: Path) -> Dict[str, float]:
         knob_value = float(shlex.split(line)[-1][:-1])  # last element is value, and we ignore the ;
         knob_dict[knob_name] = knob_value
     return knob_dict
+
+
+def load_knobs_change_file(filepath: Path) -> Dict[str, float]:
+    """
+    Loads the knob values from the file they are written in by `~.write_knob_powering`.
+
+    Args:
+        filepath (Path): `~pathlib.Path` object to the file with the saved knob values.
+
+    Returns:
+        A `~dict` of knob names and their values, in absolute powering.
+    """
+    logger.debug(f"Loading knob values from '{filepath.absolute()}'.")
+    knob_dict = {}
+    for line in filepath.read_text().splitlines():
+        knob_name = shlex.split(line)[0]
+        sign, delta = shlex.split(line)[-2:]
+        delta = delta.replace(";", "")  # we ignore the ; at the end of the line
+        knob_value = float(sign + delta)  # last element is value, and we ignore the ;
+        knob_dict[knob_name] = knob_value
+    return knob_dict
