@@ -364,6 +364,27 @@
         <span class="n">knob_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># last element is value, and we ignore the ;</span>
         <span class="n">knob_dict</span><span class="p">[</span><span class="n">knob_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">knob_value</span>
     <span class="k">return</span> <span class="n">knob_dict</span></div>
+
+
+<div class="viewcode-block" id="load_knobs_change_file"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.load_knobs_change_file">[docs]</a><span class="k">def</span> <span class="nf">load_knobs_change_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads the knob values from the file they are written in by `~.write_knob_powering`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filepath (Path): `~pathlib.Path` object to the file with the saved knob values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `~dict` of knob names and their values, in absolute powering.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading knob values from &#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">knob_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">filepath</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">knob_name</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sign</span><span class="p">,</span> <span class="n">delta</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># we ignore the ; at the end of the line</span>
+        <span class="n">knob_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sign</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>  <span class="c1"># last element is value, and we ignore the ;</span>
+        <span class="n">knob_dict</span><span class="p">[</span><span class="n">knob_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">knob_value</span>
+    <span class="k">return</span> <span class="n">knob_dict</span></div>
 </pre></div>
 
            </div>
