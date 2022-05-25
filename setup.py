@@ -30,6 +30,7 @@ with README.open("r") as docs:
 # Dependencies for the package itself
 DEPENDENCIES = [
     "click>=8.0",
+    "rich-click>=1.0",
     "numpy>=1.21.0",
     "pandas>=1.0",
     "matplotlib>=3.0",

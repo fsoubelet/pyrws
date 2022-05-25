@@ -6,8 +6,8 @@ Main command line script.
 from pathlib import Path
 from typing import Optional, Tuple
 
-import click
 import matplotlib
+import rich_click as click
 import tfs
 
 from cpymad.madx import Madx
@@ -47,7 +47,7 @@ from pyrws.utils import (
 install_traceback(width=130, suppress=[click])  # Rich handling of uncaught exceptions for the tracebacks
 
 
-@click.command(context_settings=dict(max_content_width=120))
+@click.command()
 # ----- Required Arguments ----- #
 @click.option(
     "--sequence",
