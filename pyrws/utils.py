@@ -13,6 +13,7 @@ from typing import Dict, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
+import tfs
 
 from cpymad.madx import Madx
 from loguru import logger
@@ -246,6 +247,11 @@ def write_knob_powering(file_path: Path, knob_dict: Dict[str, float]) -> None:
 def write_knob_delta(file_path: Path, nominal_knobs: Dict[str, float], matched_knobs: Dict[str, float]) -> None:
     """
     Figure out the delta from the matched knobs to the nominal knobs, and write it down to the given file.
+
+    Args:
+        file_path (Path): `~pathlib.Path` object to the file to write the knob change parameters to.
+        nominal_knobs (Dict[str, float]): the nominal values of the variables in the knob.
+        matched_knobs (Dict[str, float]): the post-rws matched values of the variables in the knob.
     """
     deltas_dict = powering_delta(nominal_knobs, matched_knobs)
     logger.trace(f"Writing knob deltas to '{file_path.absolute()}'.")
@@ -253,6 +259,31 @@ def write_knob_delta(file_path: Path, nominal_knobs: Dict[str, float], matched_k
         for knob, delta in deltas_dict.items():
             operation: str = "-" if delta < 0 else "+"
             delta_file.write(f"{knob:<10} = {knob:>10}  {operation}  {abs(delta):>22};\n")
+
+
+def write_knob_changeparameters(
+    file_path: Path, nominal_knobs: Dict[str, float], matched_knobs: Dict[str, float], knob_name: str
+) -> None:
+    """
+    Figure out the delta from the matched to nominal knobs, and write as a ``TFS`` file that can be
+    loaded in the Beta-Beat GUI to create the knob in LSA.
+
+    Args:
+        file_path (Path): `~pathlib.Path` object to the file to write the knob change parameters to.
+        nominal_knobs (Dict[str, float]): the nominal values of the variables in the knob.
+        matched_knobs (Dict[str, float]): the post-rws matched values of the variables in the knob.
+        knob_name (str): the name of the knob to write the change parameters for, this is used in the headers.
+    """
+    deltas_dict = powering_delta(nominal_knobs, matched_knobs)
+    changeparameters = tfs.TfsDataFrame()
+    changeparameters["NAME"] = deltas_dict.keys()
+    changeparameters["DELTA"] = deltas_dict.values()
+    changeparameters.headers["DESCRIPTION"] = f"{knob_name} powering changes, for LSA."
+    logger.trace(f"Writing knob changeparameters to '{file_path.absolute()}'.")
+    tfs.write(file_path, changeparameters)
+
+
+# ----- I/O Utilities ----- #
 
 
 def load_knobs_file(filepath: Path) -> Dict[str, float]:
