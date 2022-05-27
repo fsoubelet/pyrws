@@ -40,6 +40,7 @@ from pyrws.utils import (
     only_export_columns,
     only_monitors,
     prepare_output_directories,
+    write_knob_changeparameters,
     write_knob_delta,
     write_knob_powering,
 )
@@ -224,6 +225,24 @@ def create_knobs(
         write_knob_delta(
             b1_dirs["knobs"] / "working_point_change.madx", b1_nominal.working_point_knobs, b1_matched_waist.working_point_knobs
         )
+        write_knob_changeparameters(
+            file_path=b1_dirs["knobs"] / "triplets_changeparameters.tfs",
+            nominal_knobs=b1_nominal.triplets_knobs,
+            matched_knobs=b1_matched_waist.triplets_knobs,
+            knob_name="Triplets",
+        )
+        write_knob_changeparameters(
+            file_path=b1_dirs["knobs"] / "quadrupoles_changeparameters.tfs",
+            nominal_knobs=b1_nominal.quads_knobs,
+            matched_knobs=b1_matched_waist.quads_knobs,
+            knob_name="Independent quadrupoles",
+        )
+        write_knob_changeparameters(
+            file_path=b1_dirs["knobs"] / "working_point_changeparameters.tfs",
+            nominal_knobs=b1_nominal.working_point_knobs,
+            matched_knobs=b1_matched_waist.working_point_knobs,
+            knob_name="Working point",
+        )
 
     # ----- Beam 2 Nominal ----- #
     logger.info("Preparing beam 2 nominal configuration")
@@ -296,6 +315,24 @@ def create_knobs(
         write_knob_delta(b2_dirs["knobs"] / "quadrupoles_change.madx", b2_nominal.quads_knobs, b2_matched_waist.quads_knobs)
         write_knob_delta(
             b2_dirs["knobs"] / "working_point_change.madx", b2_nominal.working_point_knobs, b2_matched_waist.working_point_knobs
+        )
+        write_knob_changeparameters(
+            file_path=b2_dirs["knobs"] / "triplets_changeparameters.tfs",
+            nominal_knobs=b2_nominal.triplets_knobs,
+            matched_knobs=b2_matched_waist.triplets_knobs,
+            knob_name="Triplets",
+        )
+        write_knob_changeparameters(
+            file_path=b2_dirs["knobs"] / "quadrupoles_changeparameters.tfs",
+            nominal_knobs=b2_nominal.quads_knobs,
+            matched_knobs=b2_matched_waist.quads_knobs,
+            knob_name="Independent quadrupoles",
+        )
+        write_knob_changeparameters(
+            file_path=b2_dirs["knobs"] / "working_point_changeparameters.tfs",
+            nominal_knobs=b2_nominal.working_point_knobs,
+            matched_knobs=b2_matched_waist.working_point_knobs,
+            knob_name="Working point",
         )
 
     # ----- Generate Plots ----- #
