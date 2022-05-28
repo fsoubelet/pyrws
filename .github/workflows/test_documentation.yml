@@ -5,7 +5,7 @@ defaults:
   run:
     shell: bash
 
-on: [push, pull_request]  # Runs on all push events to any branch
+on: [pull_request]  # Runs on all push events to open pull requests
 
 jobs:
   documentation:
