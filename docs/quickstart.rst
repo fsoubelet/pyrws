@@ -74,8 +74,13 @@ To see these options, refer to the :ref:`following page <pyrws-cli>`.
             │   ├── KNOBS
             │   │   ├── quadrupoles.madx
             │   │   ├── quadrupoles_change.madx
+            │   │   ├── quadrupoles_changeparameters.tfs
             │   │   ├── triplets.madx
-            │   │   └── triplets_change.madx
+            │   │   ├── triplets_change.madx
+            │   │   ├── triplets_changeparameters.tfs
+            │   │   ├── working_point.madx
+            │   │   ├── working_point_change.madx
+            │   │   └── working_point_changeparameters.tfs
             │   ├── PLOTS
             │   │   ├── bare_vs_matched_betabeatings.pdf
             │   │   ├── betas.pdf
@@ -88,8 +93,10 @@ To see these options, refer to the :ref:`following page <pyrws-cli>`.
             │   │   ├── bare_waist_b1.tfs
             │   │   ├── bare_waist_b1_monitors.tfs
             │   │   ├── matched_waist_b1.tfs
+            │   │   ├── matched_waist_b1_fields.tfs
             │   │   ├── matched_waist_b1_monitors.tfs
             │   │   ├── nominal_b1.tfs
+            │   │   ├── nominal_b1_fields.tfs
             │   │   └── nominal_b1_monitors.tfs
             │   ├── nominal_b1.madx
             │   ├── nominal_b1.out
@@ -99,8 +106,13 @@ To see these options, refer to the :ref:`following page <pyrws-cli>`.
                 ├── KNOBS
                 │   ├── quadrupoles.madx
                 │   ├── quadrupoles_change.madx
+                │   ├── quadrupoles_changeparameters.tfs
                 │   ├── triplets.madx
-                │   └── triplets_change.madx
+                │   ├── triplets_change.madx
+                │   ├── triplets_changeparameters.tfs
+                │   ├── working_point.madx
+                │   ├── working_point_change.madx
+                │   └── working_point_changeparameters.tfs
                 ├── PLOTS
                 │   ├── bare_vs_matched_betabeatings.pdf
                 │   ├── betas.pdf
@@ -113,8 +125,10 @@ To see these options, refer to the :ref:`following page <pyrws-cli>`.
                 │   ├── bare_waist_b2.tfs
                 │   ├── bare_waist_b2_monitors.tfs
                 │   ├── matched_waist_b2.tfs
+                │   ├── matched_waist_b2_fields.tfs
                 │   ├── matched_waist_b2_monitors.tfs
                 │   ├── nominal_b2.tfs
+                │   ├── nominal_b2_fields.tfs
                 │   └── nominal_b2_monitors.tfs
                 ├── nominal_b2.madx
                 ├── nominal_b2.out
