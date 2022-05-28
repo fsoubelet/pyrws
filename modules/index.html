@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PYRWS Command Line &mdash; pyrws 0.2.1 documentation</title>
+  <title>PYRWS Command Line &mdash; pyrws 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
             <a href="../index.html" class="icon icon-home"> pyrws
           </a>
               <div class="version">
-                0.2.1
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -820,9 +820,35 @@ dir. The keys or the <a class="reference external" href="https://docs.python.org
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrws.utils.write_knob_changeparameters">
+<span class="sig-prename descclassname"><span class="pre">pyrws.utils.</span></span><span class="sig-name descname"><span class="pre">write_knob_changeparameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_knobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matched_knobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knob_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/pyrws/utils.html#write_knob_changeparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrws.utils.write_knob_changeparameters" title="Permalink to this definition"></a></dt>
+<dd><p>Figure out the delta from the matched to nominal knobs, and write as a <code class="docutils literal notranslate"><span class="pre">TFS</span></code> file that can be
+loaded in the Beta-Beat GUI to create the knob in LSA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) -- <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a> object to the file to write the knob change parameters to.</p></li>
+<li><p><strong>nominal_knobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">float]</span></code>) -- the nominal values of the variables in the knob.</p></li>
+<li><p><strong>matched_knobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">float]</span></code>) -- the post-rws matched values of the variables in the knob.</p></li>
+<li><p><strong>knob_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) -- the name of the knob to write the change parameters for, this is used in the headers.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrws.utils.write_knob_delta">
 <span class="sig-prename descclassname"><span class="pre">pyrws.utils.</span></span><span class="sig-name descname"><span class="pre">write_knob_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_knobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matched_knobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/pyrws/utils.html#write_knob_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrws.utils.write_knob_delta" title="Permalink to this definition"></a></dt>
 <dd><p>Figure out the delta from the matched knobs to the nominal knobs, and write it down to the given file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) -- <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a> object to the file to write the knob change parameters to.</p></li>
+<li><p><strong>nominal_knobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">float]</span></code>) -- the nominal values of the variables in the knob.</p></li>
+<li><p><strong>matched_knobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">float]</span></code>) -- the post-rws matched values of the variables in the knob.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

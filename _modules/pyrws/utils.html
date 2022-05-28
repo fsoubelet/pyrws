@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrws.utils &mdash; pyrws 0.2.1 documentation</title>
+  <title>pyrws.utils &mdash; pyrws 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> pyrws
           </a>
               <div class="version">
-                0.2.1
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -105,6 +105,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tfs</span>
 
 <span class="kn">from</span> <span class="nn">cpymad.madx</span> <span class="kn">import</span> <span class="n">Madx</span>
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
@@ -338,6 +339,11 @@
 <div class="viewcode-block" id="write_knob_delta"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.write_knob_delta">[docs]</a><span class="k">def</span> <span class="nf">write_knob_delta</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">nominal_knobs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">matched_knobs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Figure out the delta from the matched knobs to the nominal knobs, and write it down to the given file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (Path): `~pathlib.Path` object to the file to write the knob change parameters to.</span>
+<span class="sd">        nominal_knobs (Dict[str, float]): the nominal values of the variables in the knob.</span>
+<span class="sd">        matched_knobs (Dict[str, float]): the post-rws matched values of the variables in the knob.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">deltas_dict</span> <span class="o">=</span> <span class="n">powering_delta</span><span class="p">(</span><span class="n">nominal_knobs</span><span class="p">,</span> <span class="n">matched_knobs</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing knob deltas to &#39;</span><span class="si">{</span><span class="n">file_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
@@ -345,6 +351,31 @@
         <span class="k">for</span> <span class="n">knob</span><span class="p">,</span> <span class="n">delta</span> <span class="ow">in</span> <span class="n">deltas_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span> <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;+&quot;</span>
             <span class="n">delta_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">knob</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">knob</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">operation</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;22</span><span class="si">}</span><span class="s2">;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="write_knob_changeparameters"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.write_knob_changeparameters">[docs]</a><span class="k">def</span> <span class="nf">write_knob_changeparameters</span><span class="p">(</span>
+    <span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">nominal_knobs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">matched_knobs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">knob_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Figure out the delta from the matched to nominal knobs, and write as a ``TFS`` file that can be</span>
+<span class="sd">    loaded in the Beta-Beat GUI to create the knob in LSA.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (Path): `~pathlib.Path` object to the file to write the knob change parameters to.</span>
+<span class="sd">        nominal_knobs (Dict[str, float]): the nominal values of the variables in the knob.</span>
+<span class="sd">        matched_knobs (Dict[str, float]): the post-rws matched values of the variables in the knob.</span>
+<span class="sd">        knob_name (str): the name of the knob to write the change parameters for, this is used in the headers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">deltas_dict</span> <span class="o">=</span> <span class="n">powering_delta</span><span class="p">(</span><span class="n">nominal_knobs</span><span class="p">,</span> <span class="n">matched_knobs</span><span class="p">)</span>
+    <span class="n">changeparameters</span> <span class="o">=</span> <span class="n">tfs</span><span class="o">.</span><span class="n">TfsDataFrame</span><span class="p">()</span>
+    <span class="n">changeparameters</span><span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deltas_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">changeparameters</span><span class="p">[</span><span class="s2">&quot;DELTA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deltas_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="n">changeparameters</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;DESCRIPTION&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">knob_name</span><span class="si">}</span><span class="s2"> powering changes, for LSA.&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing knob changeparameters to &#39;</span><span class="si">{</span><span class="n">file_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">tfs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">changeparameters</span><span class="p">)</span></div>
+
+
+<span class="c1"># ----- I/O Utilities ----- #</span>
 
 
 <div class="viewcode-block" id="load_knobs_file"><a class="viewcode-back" href="../../modules/index.html#pyrws.utils.load_knobs_file">[docs]</a><span class="k">def</span> <span class="nf">load_knobs_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
