@@ -286,6 +286,13 @@ def write_knob_changeparameters(
 # ----- I/O Utilities ----- #
 
 
+def fullpath(filepath: Path) -> str:
+    """
+    Returns the full string path to the provided *filepath*, which is necessary for ``AFS`` paths.
+    """
+    return str(filepath.absolute())
+
+
 def load_knobs_file(filepath: Path) -> Dict[str, float]:
     """
     Loads the knob values from the file they are written in by `~.write_knob_powering`.
