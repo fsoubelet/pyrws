@@ -1,4 +1,85 @@
-# ----- Utilities Configuration ----- #
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "pyrws/version.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/docs",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyrws"]
+
+[project]
+name = "pyrws"
+readme = "README.md"
+description = "Python Package to Prepare Rigid Waist Shift Operations in the CCC."
+authors = [
+    {name = "Felix Soubelet", email = "felix.soubelet@cern.ch"},
+]
+license = "MIT"
+dynamic = ["version"]
+requires-python = ">=3.8"
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "click>=8.0",
+    "rich-click>=1.0",
+    "numpy>=1.21.0",
+    "pandas>=1.0",
+    "matplotlib>=3.0",
+    "tfs-pandas>=3.2.0",
+    "cpymad>=1.9.0",
+    "loguru>=0.5.0",
+    "pyhdtoolkit>=1.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest >= 6.0",
+  "pytest-cov >= 3.0",
+]
+dev = [
+  "black >= 22.1",
+  "isort >= 5.10",
+  "pylint >= 2.4",
+]
+docs = [
+  "Sphinx >= 4.4",
+  "sphinx-rtd-theme >= 1.0",
+  "sphinx-click>3.0",
+  "sphinx_copybutton < 1.0",
+  "sphinxcontrib-bibtex >= 2.4",
+  "sphinx-panels < 1.0",
+  "sphinx-prompt >= 1.5",
+]
+
+[project.urls]
+homepage = "https://github.com/fsoubelet/pyrws"
+repository = "https://github.com/fsoubelet/pyrws"
+documentation = "https://fsoubelet.github.io/pyrws"
+
+
+# ----- Dev Tools Configuration ----- #
 
 [tool.isort]
 atomic = true
