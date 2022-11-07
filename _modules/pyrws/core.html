@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrws.core &mdash; pyrws 0.3.0 documentation</title>
+  <title>pyrws.core &mdash; pyrws 0.4.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../../index.html" class="icon icon-home"> pyrws
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -78,9 +78,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>pyrws.core</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrws.core</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -111,10 +111,10 @@
 <span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
 
 <span class="kn">from</span> <span class="nn">pyhdtoolkit.cpymadtools</span> <span class="kn">import</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">matching</span><span class="p">,</span> <span class="n">orbit</span><span class="p">,</span> <span class="n">twiss</span>
-<span class="kn">from</span> <span class="nn">pyhdtoolkit.utils._misc</span> <span class="kn">import</span> <span class="n">fullpath</span>
 <span class="kn">from</span> <span class="nn">pyhdtoolkit.utils.contexts</span> <span class="kn">import</span> <span class="n">timeit</span>
 <span class="kn">from</span> <span class="nn">pyrws.constants</span> <span class="kn">import</span> <span class="n">VARIED_IR_QUADRUPOLES</span>
 <span class="kn">from</span> <span class="nn">pyrws.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">fullpath</span><span class="p">,</span>
     <span class="n">get_independent_quadrupoles_powering_knobs</span><span class="p">,</span>
     <span class="n">get_triplets_powering_knobs</span><span class="p">,</span>
     <span class="n">get_tunes_and_chroma_knobs</span><span class="p">,</span>
@@ -389,8 +389,8 @@
         <span class="n">betx</span><span class="o">=</span><span class="n">nominal_twiss</span><span class="o">.</span><span class="n">BETX</span><span class="p">[</span><span class="n">MATCH_Q11_RIGHT</span><span class="p">],</span>
         <span class="n">bety</span><span class="o">=</span><span class="n">nominal_twiss</span><span class="o">.</span><span class="n">BETY</span><span class="p">[</span><span class="n">MATCH_Q11_RIGHT</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="c1"># TODO: maybe we add some constraints for the alpha at Q11 match points with a lower weight (let&#39;s say 0.5 to get half of the beta weight)</span>
-    <span class="c1"># this may help the matching a little bit</span>
+    <span class="c1"># Could add some constraints for the alpha at Q11 match points with a lower weight</span>
+    <span class="c1"># (let&#39;s say 0.5 to get half of the beta weight) to help the matching a little bit</span>
 
     <span class="c1"># We make a knob varying Q4 to Q10 included and we match</span>
     <span class="n">lhc</span><span class="o">.</span><span class="n">vary_independent_ir_quadrupoles</span><span class="p">(</span><span class="n">madx</span><span class="p">,</span> <span class="n">quad_numbers</span><span class="o">=</span><span class="n">VARIED_IR_QUADRUPOLES</span><span class="p">,</span> <span class="n">sides</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">beam</span><span class="o">=</span><span class="n">beam</span><span class="p">)</span>
