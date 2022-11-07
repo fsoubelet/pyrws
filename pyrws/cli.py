@@ -16,9 +16,8 @@ from matplotlib import pyplot as plt
 from rich.traceback import install as install_traceback
 
 from pyhdtoolkit.cpymadtools import lhc
-from pyhdtoolkit.utils._misc import fullpath
 from pyhdtoolkit.utils.contexts import timeit
-from pyhdtoolkit.utils.defaults import config_logger
+from pyhdtoolkit.utils.logging import config_logger
 from pyrws.constants import AFFECTED_ELEMENTS
 from pyrws.core import (
     get_bare_waist_shift_beam1_config,
@@ -37,6 +36,7 @@ from pyrws.plotting import (
 )
 from pyrws.utils import (
     add_betabeating_columns,
+    fullpath,
     only_export_columns,
     only_monitors,
     prepare_output_directories,
@@ -150,6 +150,11 @@ def create_knobs(
     figsize: Optional[Tuple[int, int]],
     loglevel: Optional[str],
 ):
+    """
+    Command-line program to generate rigid waist shift configurations for the LHC.
+    Given a sequence, optics file, ip and RWS setting, will output the knob settings
+    for the triplets, rematching quadrupoles and MQTs. Plots can be generated too.
+    """
     # ----- Configuration ----- #
     config_logger(level=loglevel)
     b1_dirs, b2_dirs = prepare_output_directories(outputdir)
