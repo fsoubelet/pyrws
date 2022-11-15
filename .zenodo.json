@@ -1,0 +1,12 @@
+{
+    "creators": [
+        {
+            "name": "Felix Soubelet",
+            "affiliation": "University of Liverpool & CERN",
+            "orcid": "0000-0001-8012-1440"
+        }
+    ],
+    "title": "pyrws",
+    "license": "MIT",
+    "description": "Python Package to Prepare Rigid Waist Shift Operations in the CCC."
+}
